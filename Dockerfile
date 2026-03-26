@@ -46,9 +46,13 @@ USER nonroot
 WORKDIR /app
 
 # Run the FastAPI application
+# --forwarded-allow-ips : IPs to trust with proxy headers
+# --proxy-protocol : Allow using HTTP and PROXY protocol together
 CMD [ \
   "gunicorn", \
   "app.core.app:app", \
   "--worker-class", "uvicorn.workers.UvicornWorker", \
-  "--bind", "0.0.0.0:8000" \
+  "--bind", "0.0.0.0:8000", \
+  "--forwarded-allow-ips", "*", \
+  "--proxy-protocol" \
 ]
