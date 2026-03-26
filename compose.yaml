@@ -1,0 +1,29 @@
+services:
+
+  app:
+    container_name: app
+    image: ghcr.io/julienpillaud/julienpillaud:${IMAGE_TAG}
+    restart: always
+    networks:
+      - traefik-public
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.constraint-label=traefik-public
+
+      - traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=8000
+
+      - traefik.http.routers.${SERVICE_NAME}-http.rule=Host(`${HOST}`)
+      - traefik.http.routers.${SERVICE_NAME}-http.entrypoints=http
+
+      - traefik.http.routers.${SERVICE_NAME}-https.rule=Host(`${HOST}`)
+      - traefik.http.routers.${SERVICE_NAME}-https.entrypoints=https
+      - traefik.http.routers.${SERVICE_NAME}-https.tls=true
+      - traefik.http.routers.${SERVICE_NAME}-https.tls.certresolver=le
+
+      # Enable redirection for HTTP and HTTPS
+      - traefik.http.routers.${SERVICE_NAME}-http.middlewares=https-redirect
+
+networks:
+  traefik-public:
+    external: true
