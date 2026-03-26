@@ -5,6 +5,14 @@
 
 ### Features
 
+* trigger release ([#10](https://github.com/julienpillaud/julienpillaud/issues/10)) ([5aa64e3](https://github.com/julienpillaud/julienpillaud/commit/5aa64e30328c01711c31742d3d7424a9adec0b79))
+* update Gunicorn configuration with proxy support ([#7](https://github.com/julienpillaud/julienpillaud/issues/7)) ([7b8b559](https://github.com/julienpillaud/julienpillaud/commit/7b8b5596d9dff45e64902abf822bbb5ab9c6458b))
+
+## [0.2.0](https://github.com/julienpillaud/julienpillaud/compare/0.1.0...0.2.0) (2026-03-26)
+
+
+### Features
+
 * update Gunicorn configuration with proxy support ([#7](https://github.com/julienpillaud/julienpillaud/issues/7)) ([7b8b559](https://github.com/julienpillaud/julienpillaud/commit/7b8b5596d9dff45e64902abf822bbb5ab9c6458b))
 
 ## 0.1.0 (2026-03-26)
