@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/julienpillaud/julienpillaud/compare/0.5.0...0.6.0) (2026-03-27)
+
+
+### Features
+
+* add work in progress page ([#19](https://github.com/julienpillaud/julienpillaud/issues/19)) ([1cd811e](https://github.com/julienpillaud/julienpillaud/commit/1cd811e581cc864c2cd29ed832a2d8f621688992))
+
 ## [0.5.0](https://github.com/julienpillaud/julienpillaud/compare/0.4.0...0.5.0) (2026-03-27)
 
 
