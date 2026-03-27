@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/julienpillaud/julienpillaud/compare/0.4.0...0.5.0) (2026-03-27)
+
+
+### Features
+
+* add deploy workflow ([#17](https://github.com/julienpillaud/julienpillaud/issues/17)) ([5c75b4a](https://github.com/julienpillaud/julienpillaud/commit/5c75b4a0b0536ad58790352c9b7995de61668c45))
+
 ## [0.4.0](https://github.com/julienpillaud/julienpillaud/compare/0.3.0...0.4.0) (2026-03-27)
 
 
