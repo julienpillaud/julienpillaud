@@ -6,6 +6,8 @@ services:
     restart: always
     networks:
       - traefik-public
+    env_file:
+      - .env
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
