@@ -4,11 +4,9 @@ version = "0.2.0"
 requires-python = ">=3.14"
 dependencies = [
     "fastapi>=0.135",
-    # Server
-    "gunicorn>=25.1",
-    "httptools>=0.7",
-    "uvicorn-worker>=0.4",
-    "uvloop>=0.22",
+    "logfire[fastapi]>=4.30",
+    "pydantic-settings>=2.13",
+    "uvicorn>=0.41",
 ]
 
 [dependency-groups]
@@ -16,8 +14,6 @@ dev = [
     "mypy>=1.19",
     "pre-commit>=4.5",
     "ruff>=0.15",
-    # Server
-    "uvicorn>=0.41",
     "watchfiles>=1.1",
 ]
 
