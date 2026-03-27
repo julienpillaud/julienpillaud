@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/julienpillaud/julienpillaud/compare/0.6.0...0.6.1) (2026-03-27)
+
+
+### Bug Fixes
+
+* adjust font size and width for responsive design ([#21](https://github.com/julienpillaud/julienpillaud/issues/21)) ([9d648ff](https://github.com/julienpillaud/julienpillaud/commit/9d648ff68571c39762283ade7d94b9df5d8ad53f))
+
 ## [0.6.0](https://github.com/julienpillaud/julienpillaud/compare/0.5.0...0.6.0) (2026-03-27)
 
 
