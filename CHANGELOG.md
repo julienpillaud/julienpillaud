@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/julienpillaud/julienpillaud/compare/0.2.0...0.3.0) (2026-03-27)
+
+
+### Features
+
+* add logging and monitoring ([#12](https://github.com/julienpillaud/julienpillaud/issues/12)) ([629199e](https://github.com/julienpillaud/julienpillaud/commit/629199e5e5262095354e8bd047f4a5da97b59d77))
+
 ## [0.2.0](https://github.com/julienpillaud/julienpillaud/compare/0.1.0...0.2.0) (2026-03-26)
 
 
