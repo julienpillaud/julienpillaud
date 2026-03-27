@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/julienpillaud/julienpillaud/compare/0.3.0...0.4.0) (2026-03-27)
+
+
+### Features
+
+* fix versioning ([#16](https://github.com/julienpillaud/julienpillaud/issues/16)) ([e8637a7](https://github.com/julienpillaud/julienpillaud/commit/e8637a79292c7049bffc186f6aa14c733bca65d0))
+
+
+### Bug Fixes
+
+* update uv.lock ([#14](https://github.com/julienpillaud/julienpillaud/issues/14)) ([0e30e76](https://github.com/julienpillaud/julienpillaud/commit/0e30e76605b3389c0f8462b5095a7f6132d710d5))
+
 ## [0.3.0](https://github.com/julienpillaud/julienpillaud/compare/0.2.0...0.3.0) (2026-03-27)
 
 
