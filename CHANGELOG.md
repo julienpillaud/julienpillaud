@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/julienpillaud/julienpillaud/compare/0.6.1...0.7.0) (2026-03-30)
+
+
+### Features
+
+* add domain entities and MongoDB repository ([#23](https://github.com/julienpillaud/julienpillaud/issues/23)) ([8ee147a](https://github.com/julienpillaud/julienpillaud/commit/8ee147af28bb15ea6e7f6541fa6c17a8867c65d8))
+
 ## [0.6.1](https://github.com/julienpillaud/julienpillaud/compare/0.6.0...0.6.1) (2026-03-27)
 
 
