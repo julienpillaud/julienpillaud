@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
+</head>
+<body>
+
+<h1>Julien Pillaud</h1>
+<h2>Développeur Python | Backend | FastAPI</h2>
+<h3>📩 <a href="mailto:{{ email }}">Email</a> | 💻 <a href="{{ github }}">GitHub</a> | 🤝 <a href="{{ linkedin }}">LinkedIn</a></h3>
+
+<h3>🛠 COMPÉTENCES TECHNIQUES</h3>
+<ul>
+  <li><strong>Développement :</strong> Python (FastAPI, Pydantic, SQLAlchemy, PyMongo, Pytest)</li>
+  <li><strong>CI/CD &amp; Cloud :</strong> GitHub Actions, Docker, GCP, AWS</li>
+  <li><strong>Bases de données :</strong> PostgreSQL, MongoDB, Redis</li>
+</ul>
+<h3>💼 EXPÉRIENCE PROFESSIONNELLE</h3>
+<h4>ARAIKO | Développeur Backend</h4>
+<p><em>2025 (1 an)</em></p>
+<p>Développement d’une application SaaS de gestion des connaissances basée sur une architecture RAG et des LLM.</p>
+<ul>
+  <li>Contribution à l’évolution d’une architecture découplée et testable (<strong>Clean Architecture</strong>).</li>
+  <li>Isolation de la couche domaine et centralisation de la logique métier (inspiration <strong>DDD</strong>).</li>
+  <li>Mise en œuvre du principe d’<strong>inversion des dépendances</strong> via typage et <code>Protocol</code>.</li>
+  <li>Définition d’une hiérarchie d’erreurs domaine et gestion centralisée des erreurs HTTP.</li>
+  <li>Refactorisation de l’entité métier "fiche de connaissance" pour intégrer le <strong>versioning</strong>.</li>
+</ul>
+<h4><strong>AUTAJON</strong> | Développeur Backend</h4>
+<p><em>2024 (1 an)</em></p>
+<p>Migration des outils internes vers la stack Python / FastAPI / PostgreSQL.</p>
+<ul>
+  <li>Développement de modules réutilisables pour accélérer la création d’<strong>API CRUD</strong>.</li>
+  <li>Création d'une classe générique encapsulant les opérations DB (filtrage, pagination).</li>
+  <li>Gestion des transactions SQL via le pattern <strong>Unit of Work</strong>.</li>
+  <li>Mise en place de l’outillage qualité : linting, typing, hooks de pre-commit et pipelines <strong>CI/CD</strong>.</li>
+  <li>Structuration des tests unitaires et d’intégration avec génération de données.</li>
+</ul>
+<h4><strong>LUMAPPS</strong> | Développeur Back-end</h4>
+<p><em>2023 (1 an)</em></p>
+<p>Développement et maintenance d’une application web de duplication de sites.</p>
+<ul>
+  <li>Utilisation des APIs du produit pour récupérer tous les éléments du site source et les créer sur le site de destination</li>
+  <li>Analyse des logs sous <strong>GCP</strong> pour comprendre l’origine du problème</li>
+  <li>Corrections de bugs</li>
+  <li>Développement de nouvelles fonctionnalités pour prendre en compte les nouvelles APIs disponibles</li>
+</ul>
+<h4>Somfy | Développeur Python</h4>
+<p><em>2019 - 2022 (3 ans)</em></p>
+<p><strong>Développement d’un outil avec une interface utilisateur pour effectuer des essais d’endurance</strong></p>
+<ul>
+  <li>Développement d’un driver Python exposant une API pour un protocole de communication filaire</li>
+  <li>Conception d’une application web déployée sur Raspberry Pi offrant une solution portable</li>
+  <li>Développement d’interfaces avec attention portée à la lisibilité et à l’ergonomie :
+    <ul>
+      <li>Visualisation des caractéristiques du moteur</li>
+      <li>Réglage des paramètres</li>
+      <li>Définition des cycles d’endurance</li>
+      <li>Suivi en temps réel des essais</li>
+    </ul>
+  </li>
+  <li>Gestion des erreurs et mise en place de mécanismes permettant la reprise d’un essai en cours</li>
+</ul>
+<p><strong>Développement de la partie logicielle d’un banc pour automatiser les tests de validation fonctionnelle</strong></p>
+<ul>
+  <li>Gestion des différents cas de vie pour définir les conditions initiales des tests</li>
+  <li>Gestion des drivers de l’alimentation électrique pilotée et du capteur de position</li>
+  <li>Écriture d’un fichier de configuration pytest pour prendre en compte les différents projets</li>
+  <li>Écriture d’un plug-in pytest pour enregistrer les résultats en base de données</li>
+  <li>Développement d’une application web pour visualiser les résultats</li>
+  <li>Écriture des tests</li>
+</ul>
+<h4><strong>LE VIN D’ORGE</strong> | Développeur Web</h4>
+<p><em>2018 (1 an)</em></p>
+<p><strong>Développement d’une application web pour la gestion des produits</strong></p>
+<ul>
+  <li>Développement des interfaces de consultation, création et mise à jour des fiches produits</li>
+  <li>Conception d'un système de templates pour la génération de planches d'étiquettes de prix prêtes à l'impression</li>
+  <li>Développement d'un connecteur pour faciliter les appels avec l'API du logiciel de caisse</li>
+  <li>Automatisation de la récupération des stocks pour l'établissement d'inventaires</li>
+  <li>Gestion asynchrone des flux via FastStream et RabbitMQ pour isoler l'application des latences de l'API du logiciel de caisse</li>
+  <li>Optimisation des performances par la mise en cache Redis des données à faible fréquence de mise à jour</li>
+</ul>
+<h3>🎓 FORMATION</h3>
+<ul>
+  <li><strong>2006</strong> : Master mécanique, énergétique et ingénierie – <em>Université de Poitiers</em></li>
+</ul>
+<h3>🌍 LANGUES</h3>
+<ul>
+  <li><strong>Anglais :</strong> Intermédiaire</li>
+</ul>
+
+</body>
+</html>
