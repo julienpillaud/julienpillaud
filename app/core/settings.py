@@ -20,12 +20,6 @@ class Settings(BaseSettings):
     logfire_token: str = ""
     template_path: Path = app_path / "templates"
 
-    full_name: str
-    job_title: str
-    email: str
-    github: str
-    linkedin: str
-
     mongo_user: str
     mongo_password: str
     mongo_host: str

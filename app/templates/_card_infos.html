@@ -1,0 +1,29 @@
+<h1 class="text-2xl font-extrabold text-base-content">
+  {{ resume.metadata.contact.full_name }}
+</h1>
+<p class="text-lg font-medium text-base-content/70">
+  {{ resume.metadata.contact.job_title }}
+</p>
+
+<div class="flex gap-6">
+  <a
+    href="mailto:{{ resume.metadata.contact.email }}"
+    class="btn btn-circle btn-soft btn-secondary"
+  >
+    <i class="bi bi-envelope text-accent"></i>
+  </a>
+  <a
+    href="https://github.com/{{ resume.metadata.contact.github_username }}"
+    target="_blank"
+    class="btn btn-circle btn-soft btn-secondary"
+  >
+    <i class="bi bi-github text-accent"></i>
+  </a>
+  <a
+    href="https://www.linkedin.com/in/{{ resume.metadata.contact.linkedin_username }}"
+    target="_blank"
+    class="btn btn-circle btn-soft btn-secondary"
+  >
+    <i class="bi bi-linkedin text-accent"></i>
+  </a>
+</div>

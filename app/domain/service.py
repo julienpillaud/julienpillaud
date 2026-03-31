@@ -1,21 +1,21 @@
-from app.core.settings import Settings
-from app.domain.entities import Metadata, Resume
+from collections import defaultdict
+
+from app.domain.entities import Resume
 from app.domain.repository import RepositoryProtocol
 
 
-async def get_resume(settings: Settings, repository: RepositoryProtocol) -> Resume:
+async def get_resume(repository: RepositoryProtocol) -> Resume:
+    metadata = await repository.get_metadata()
+
     experiences = await repository.get_experiences()
-    resume = Resume(
-        full_name=settings.full_name,
-        job_title=settings.job_title,
-        email=settings.email,
-        github=settings.github,
-        linkedin=settings.linkedin,
-        metadata=Metadata(
-            skills=[],
-            education=[],
-            languages=[],
-        ),
+
+    raw_skills = await repository.get_skills()
+    skills = defaultdict(list)
+    for skill in raw_skills:
+        skills[skill.category].append(skill)
+
+    return Resume(
+        metadata=metadata,
+        skills=dict(skills),
         experiences=experiences,
     )
-    return resume

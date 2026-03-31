@@ -4,23 +4,22 @@ name = "julienpillaud"
 dynamic = ["version"]
 requires-python = ">=3.14"
 dependencies = [
-    "fastapi>=0.135",
-    "httptools>=0.7",
-    "jinja2>=3.1",
-    "logfire[fastapi]>=4.31",
-    "pydantic-settings>=2.13",
-    "pydantic[email]>=2.12",
-    "pymongo>=4.16",
-    "uvicorn>=0.41",
-    "uvloop>=0.22",
+    "fastapi==0.135.2",
+    "httptools==0.7.1",
+    "jinja2==3.1.6",
+    "logfire[fastapi]==4.31.0",
+    "pydantic-settings==2.13.1",
+    "pymongo==4.16.0",
+    "uvicorn==0.42.0",
+    "uvloop==0.22.1",
 ]
 
 [dependency-groups]
 dev = [
-    "mypy>=1.19",
-    "pre-commit>=4.5",
-    "ruff>=0.15",
-    "watchfiles>=1.1",
+    "mypy==1.19.1",
+    "pre-commit==4.5.1",
+    "ruff==0.15.8",
+    "watchfiles==1.1.1",
 ]
 
 [tool.ruff]

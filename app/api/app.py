@@ -1,12 +1,11 @@
 from fastapi import FastAPI
 from fastapi.requests import Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import RedirectResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.dependencies import get_templates
 from app.api.router import router
 from app.core.settings import Settings
-from app.domain.utils import generate_data
 
 
 def create_fastapi_app(settings: Settings) -> FastAPI:
@@ -21,19 +20,11 @@ def create_fastapi_app(settings: Settings) -> FastAPI:
 
 
 def add_exception_handlers(app: FastAPI, settings: Settings) -> None:
-    templates = get_templates(settings=settings)
+    templates = get_templates(settings=settings)  # noqa: F841
 
     @app.exception_handler(StarletteHTTPException)
     async def http_exception_handler(
         request: Request,
         exc: StarletteHTTPException,
-    ) -> HTMLResponse:
-        data = generate_data(
-            message=exc.detail,
-            status_code=exc.status_code,
-        )
-        return templates.TemplateResponse(
-            request=request,
-            name="temp.html",
-            context={"data": data.model_dump_json(indent=2)},
-        )
+    ) -> RedirectResponse:
+        return RedirectResponse(url=request.url_for("home"))

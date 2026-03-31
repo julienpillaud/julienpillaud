@@ -1,13 +1,31 @@
-from pydantic import BaseModel, EmailStr, HttpUrl
+from enum import StrEnum
+
+from pydantic import BaseModel
+
+
+class ContactInfo(BaseModel):
+    full_name: str
+    job_title: str
+    email: str
+    github_username: str
+    linkedin_username: str
+
+
+class SkillCategory(StrEnum):
+    DEVELOPMENT = "Développement"
+    TESTING_QUALITY = "Tests & Qualité"
+    DATABASE = "Bases de données"
+    INFRA = "CI/CD - Cloud"
 
 
 class Skill(BaseModel):
-    category: str
-    technologies: list[str]
+    order: int
+    category: SkillCategory
+    technology: str
 
 
 class Metadata(BaseModel):
-    skills: list[Skill]
+    contact: ContactInfo
     education: list[str]
     languages: list[str]
 
@@ -33,10 +51,6 @@ class Experience(BaseModel):
 
 
 class Resume(BaseModel):
-    full_name: str
-    job_title: str
-    email: EmailStr
-    github: HttpUrl | None = None
-    linkedin: HttpUrl | None = None
     metadata: Metadata
+    skills: dict[SkillCategory, list[Skill]]
     experiences: list[Experience]
