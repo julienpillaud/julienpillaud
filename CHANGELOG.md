@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/julienpillaud/julienpillaud/compare/0.8.0...0.9.0) (2026-03-31)
+
+
+### Features
+
+* add static files support ([#27](https://github.com/julienpillaud/julienpillaud/issues/27)) ([98b6ff7](https://github.com/julienpillaud/julienpillaud/commit/98b6ff7d50d01a6d3aa2c2b36a7614fc0c272dcd))
+
 ## [0.8.0](https://github.com/julienpillaud/julienpillaud/compare/0.7.0...0.8.0) (2026-03-31)
 
 
