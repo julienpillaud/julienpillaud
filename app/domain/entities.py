@@ -9,6 +9,7 @@ class ContactInfo(BaseModel):
     email: str
     github_username: str
     linkedin_username: str
+    available: bool
 
 
 class SkillCategory(StrEnum):
