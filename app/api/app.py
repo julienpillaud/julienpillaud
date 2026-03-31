@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.dependencies import get_templates
@@ -15,6 +16,7 @@ def create_fastapi_app(settings: Settings) -> FastAPI:
         openapi_url=None,
     )
     add_exception_handlers(app=app, settings=settings)
+    mount_static(app=app, settings=settings)
     app.include_router(router)
     return app
 
@@ -28,3 +30,11 @@ def add_exception_handlers(app: FastAPI, settings: Settings) -> None:
         exc: StarletteHTTPException,
     ) -> RedirectResponse:
         return RedirectResponse(url=request.url_for("home"))
+
+
+def mount_static(app: FastAPI, settings: Settings) -> None:
+    app.mount(
+        path="/static",
+        app=StaticFiles(directory=settings.paths.static),
+        name="static",
+    )

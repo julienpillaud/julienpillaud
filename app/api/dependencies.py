@@ -23,7 +23,7 @@ def get_settings() -> Settings:
 
 @lru_cache
 def get_templates(settings: Settings) -> Jinja2Templates:
-    return Jinja2Templates(directory=settings.template_path)
+    return Jinja2Templates(directory=settings.paths.templates)
 
 
 @lru_cache
