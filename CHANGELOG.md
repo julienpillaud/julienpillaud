@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/julienpillaud/julienpillaud/compare/0.7.0...0.8.0) (2026-03-31)
+
+
+### Features
+
+* update resume rendering ([#25](https://github.com/julienpillaud/julienpillaud/issues/25)) ([4c86949](https://github.com/julienpillaud/julienpillaud/commit/4c86949bf6a84ff214974a5543e4bb92ef724161))
+
 ## [0.7.0](https://github.com/julienpillaud/julienpillaud/compare/0.6.1...0.7.0) (2026-03-30)
 
 
