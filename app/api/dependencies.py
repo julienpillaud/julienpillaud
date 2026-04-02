@@ -5,6 +5,7 @@ from pydantic import BaseModel, ConfigDict
 from pymongo import AsyncMongoClient
 
 from app.core.settings import Settings
+from app.infrastructure.pdf_converter import GotenbergPDFConverter
 from app.infrastructure.repository import MongoDocument, MongoRepository
 
 
@@ -12,8 +13,9 @@ class AppContext(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     settings: Settings
-    repository: MongoRepository
     templates: Jinja2Templates
+    repository: MongoRepository
+    pdf_converter: GotenbergPDFConverter
 
 
 @lru_cache
@@ -32,8 +34,10 @@ def get_app_context() -> AppContext:
     client: AsyncMongoClient[MongoDocument] = AsyncMongoClient(settings.mongo_uri)
     database = client[settings.mongo_database]
     repository = MongoRepository(database=database)
+    pdf_converter = GotenbergPDFConverter(host=settings.gotenberg_host)
     return AppContext(
         settings=settings,
-        repository=repository,
         templates=get_templates(settings=settings),
+        repository=repository,
+        pdf_converter=pdf_converter,
     )

@@ -1,0 +1,18 @@
+<h2 class="card-title text-sm">{{ project.context }}</h2>
+<ul class="space-y-2">
+  {% for task in project.tasks %}
+    <li class="flex gap-2 text-sm opacity-80">
+      <span class="text-primary font-bold">✓</span>
+      <div>
+        {{ task.label }}
+        {% if task.details %}
+          <ul class="mt-2 space-y-2">
+            {% for detail in task.details %}
+              <li class="flex gap-2"><span>–</span>{{ detail }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </li>
+  {% endfor %}
+</ul>

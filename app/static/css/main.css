@@ -1,0 +1,6 @@
+@media (hover: none) {
+  .tooltip::before,
+  .tooltip::after {
+    display: none !important;
+  }
+}

@@ -10,6 +10,8 @@ class ContactInfo(BaseModel):
     github_username: str
     linkedin_username: str
     available: bool
+    location: str
+    remote: str
 
 
 class SkillCategory(StrEnum):

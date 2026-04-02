@@ -1,0 +1,25 @@
+services:
+  app:
+    container_name: app
+    build: .
+    ports:
+      - "8000:8000"
+    networks:
+      - internal
+    command: uvicorn app.core.app:app --host 0.0.0.0 --port 8000 --reload
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app
+        - action: rebuild
+          path: pyproject.toml
+
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
