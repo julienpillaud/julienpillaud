@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/julienpillaud/julienpillaud/compare/0.9.0...0.10.0) (2026-04-02)
+
+
+### Features
+
+* add PDF generation (in progress) ([#29](https://github.com/julienpillaud/julienpillaud/issues/29)) ([fcfc996](https://github.com/julienpillaud/julienpillaud/commit/fcfc9965a312e2726b302ec77e67f1fa9c3b5769))
+
 ## [0.9.0](https://github.com/julienpillaud/julienpillaud/compare/0.8.0...0.9.0) (2026-03-31)
 
 
