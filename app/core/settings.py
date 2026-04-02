@@ -27,11 +27,14 @@ class Settings(BaseSettings):
     environment: AppEnvironment
     logfire_token: str = ""
     paths: AppPaths = AppPaths()
+    api_key: str
 
     mongo_user: str
     mongo_password: str
     mongo_host: str
     mongo_database: str
+
+    gotenberg_host: str
 
     @computed_field
     @property
