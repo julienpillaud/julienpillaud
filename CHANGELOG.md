@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/julienpillaud/julienpillaud/compare/0.10.0...0.11.0) (2026-04-09)
+
+
+### Features
+
+* add PDF generation ([#31](https://github.com/julienpillaud/julienpillaud/issues/31)) ([83674c8](https://github.com/julienpillaud/julienpillaud/commit/83674c8762de696d0d2dcca29ad7e8df363efdb7))
+
 ## [0.10.0](https://github.com/julienpillaud/julienpillaud/compare/0.9.0...0.10.0) (2026-04-02)
 
 
