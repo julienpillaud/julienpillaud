@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/julienpillaud/julienpillaud/compare/0.11.0...0.12.0) (2026-04-09)
+
+
+### Features
+
+* update prod docker compose ([#33](https://github.com/julienpillaud/julienpillaud/issues/33)) ([d2bd2d8](https://github.com/julienpillaud/julienpillaud/commit/d2bd2d88678be8f503b00f743286d24419a85bc2))
+
 ## [0.11.0](https://github.com/julienpillaud/julienpillaud/compare/0.10.0...0.11.0) (2026-04-09)
 
 
