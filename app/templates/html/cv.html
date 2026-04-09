@@ -20,40 +20,11 @@
 </head>
 
 <body class="bg-base-300 min-h-screen">
+
 {% include "html/_navbar.html" %}
-<main class="max-w-4xl mx-auto flex flex-col gap-2 md:gap-4 px-3 py-4">
 
-  <div class="card bg-base-200 shadow">
-    <div class="card-body p-3">
-      {% include "html/_card_infos.html" %}
-    </div>
-  </div>
+{% include "_content.html" %}
 
-  <div class="card bg-base-200 shadow">
-    <div class="card-body p-3">
-      {% include "_card_skills.html" %}
-    </div>
-  </div>
-
-  <div class="card bg-base-200 shadow">
-    <div class="card-body p-3">
-      {% include "html/_card_experiences.html" %}
-    </div>
-  </div>
-
-  <div class="card bg-base-200 shadow">
-    <div class="card-body p-3">
-      {% include "_card_education.html" %}
-    </div>
-  </div>
-
-  <div class="card bg-base-200 shadow">
-    <div class="card-body p-3">
-      {% include "_card_languages.html" %}
-    </div>
-  </div>
-
-</main>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <script type="module" src="{{ url_for('static', path='js/main.js') }}"></script>

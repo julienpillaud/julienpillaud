@@ -20,7 +20,7 @@ async def home(
     return context.templates.TemplateResponse(
         request=request,
         name="html/cv.html",
-        context={"resume": resume},
+        context={"format": "html", "resume": resume},
     )
 
 
@@ -29,11 +29,15 @@ async def download_pdf(
     context: Annotated[AppContext, Depends(get_app_context)],
 ) -> StreamingResponse:
     resume = await get_resume(repository=context.repository)
-    html = context.templates.get_template("pdf/cv.html").render({"resume": resume})
+    html = context.templates.get_template("pdf/cv.html").render(
+        {"format": "pdf", "resume": resume}
+    )
+    name = resume.metadata.contact.full_name.lower().replace(" ", "-")
+    filename = f"{name}-cv.pdf"
     return StreamingResponse(
         context.pdf_converter.stream_pdf(html),
         media_type="application/pdf",
-        headers={"Content-Disposition": "attachment; filename=cv.pdf"},
+        headers={"Content-Disposition": f"attachment; filename={filename}"},
     )
 
 
@@ -46,5 +50,5 @@ async def view_pdf(
     return context.templates.TemplateResponse(
         request=request,
         name="pdf/cv.html",
-        context={"resume": resume},
+        context={"format": "pdf", "resume": resume},
     )

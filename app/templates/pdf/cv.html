@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Preview PDF</title>
+  <title>{{ resume.metadata.contact.full_name }}</title>
   <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
@@ -28,17 +28,28 @@
     }
 
     @media print {
+    {# Remove padding used for preview #}
       body {
         padding: 0;
       }
 
-      .border-primary {
-        border-color: rgba(0, 0, 0, 0.3) !important;
-        color: inherit !important;
+    {# Remove all shadow #}
+      * {
+        box-shadow: none !important;
       }
 
-      .card {
-        break-after: avoid;
+    {# Add padding top after page break #}
+      .break-inside-avoid-page {
+        padding-top: 1rem !important;
+      }
+
+      .text-primary,
+      .text-secondary {
+        color: currentColor !important;
+      }
+
+      .border-primary {
+        border-color: rgba(0, 0, 0, 0.3) !important;
       }
     }
 
@@ -47,47 +58,9 @@
 <body>
 
 <div class="pdf">
-  <div class="content p-6">
 
-    <div class="card">
-      <div class="card-body p-2 md:p-4">
-        {% include "pdf/_card_infos.html" %}
-      </div>
-    </div>
+  {% include "_content.html" %}
 
-    <div class="divider m-0"></div>
-
-    <div class="card">
-      <div class="card-body p-2 md:p-4">
-        {% include "_card_skills.html" %}
-      </div>
-    </div>
-
-    <div class="divider m-0"></div>
-
-    <div class="card">
-      <div class="card-body p-2 md:p-4">
-        {% include "pdf/_card_experiences.html" %}
-      </div>
-    </div>
-
-    <div class="divider m-0"></div>
-
-    <div class="card">
-      <div class="card-body p-2 md:p-4">
-        {% include "_card_education.html" %}
-      </div>
-    </div>
-
-    <div class="divider m-0"></div>
-
-    <div class="card">
-      <div class="card-body p-2 md:p-4">
-        {% include "_card_languages.html" %}
-      </div>
-    </div>
-
-  </div>
 </div>
 
 </body>
