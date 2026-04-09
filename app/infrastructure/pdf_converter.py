@@ -7,6 +7,13 @@ class GotenbergPDFConverter:
     def __init__(self, host: str) -> None:
         self.host = host
         self.converter_url = f"{host}/forms/chromium/convert/html"
+        self.options = {
+            "marginTop": "0",
+            "marginBottom": "0",
+            "marginLeft": "0",
+            "marginRight": "0",
+            "preferCssPageSize": "true",
+        }
 
     async def stream_pdf(
         self,
@@ -21,6 +28,7 @@ class GotenbergPDFConverter:
                 "POST",
                 self.converter_url,
                 files={"files": ("index.html", html, "text/html")},
+                data=self.options,
                 timeout=timeout,
             ) as response,
         ):
