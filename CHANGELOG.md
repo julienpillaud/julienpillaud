@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://github.com/julienpillaud/julienpillaud/compare/0.12.0...0.13.0) (2026-04-10)
+
+
+### Features
+
+* enhance Metadata with structured education & language sorting ([#35](https://github.com/julienpillaud/julienpillaud/issues/35)) ([c7aca84](https://github.com/julienpillaud/julienpillaud/commit/c7aca84bde330cad54e1fc0a4a66fef07ab877b8))
+
 ## [0.12.0](https://github.com/julienpillaud/julienpillaud/compare/0.11.0...0.12.0) (2026-04-09)
 
 
