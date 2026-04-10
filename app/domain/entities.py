@@ -1,6 +1,6 @@
 from enum import StrEnum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
 
 
 class ContactInfo(BaseModel):
@@ -12,6 +12,19 @@ class ContactInfo(BaseModel):
     available: bool
     location: str
     remote: str
+
+
+class Education(BaseModel):
+    year: int
+    name: str
+    school: str
+
+
+class Language(BaseModel):
+    order: int
+    name: str
+    level: str
+    optional: bool
 
 
 class SkillCategory(StrEnum):
@@ -29,8 +42,18 @@ class Skill(BaseModel):
 
 class Metadata(BaseModel):
     contact: ContactInfo
-    education: list[str]
-    languages: list[str]
+    education: list[Education]
+    languages: list[Language]
+
+    @computed_field
+    @property
+    def sort_languages(self) -> list[Language]:
+        return sorted(self.languages, key=lambda x: x.order)
+
+    @computed_field
+    @property
+    def sort_education(self) -> list[Education]:
+        return sorted(self.education, key=lambda x: x.year, reverse=True)
 
 
 class Task(BaseModel):
