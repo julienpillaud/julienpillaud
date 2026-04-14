@@ -20,7 +20,7 @@ async def copy_collection(
 
 
 async def run(settings: Settings, args: argparse.Namespace) -> None:
-    async with AsyncMongoClient(settings.mongo_uri) as client:
+    async with AsyncMongoClient[MongoDocument](settings.mongo_uri) as client:
         src_db = client[args.src]
         dst_db = client[args.dst]
 
