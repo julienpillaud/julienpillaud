@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://github.com/julienpillaud/julienpillaud/compare/0.13.0...0.14.0) (2026-04-15)
+
+
+### Features
+
+* refactor skill category and experience ([#37](https://github.com/julienpillaud/julienpillaud/issues/37)) ([a48d940](https://github.com/julienpillaud/julienpillaud/commit/a48d9401d49ec7e84eba4329168fd40ec4f889c0))
+
 ## [0.13.0](https://github.com/julienpillaud/julienpillaud/compare/0.12.0...0.13.0) (2026-04-10)
 
 
