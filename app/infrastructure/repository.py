@@ -21,5 +21,10 @@ class MongoRepository(RepositoryProtocol):
         return [Experience.model_validate(data) for data in result]
 
     async def get_skills(self) -> list[Skill]:
-        result = await self.database["skills"].find().sort({"order": 1}).to_list()
+        result = (
+            await self.database["skills"]
+            .find()
+            .sort({"category.display_order": 1, "display_order": 1})
+            .to_list()
+        )
         return [Skill.model_validate(data) for data in result]
