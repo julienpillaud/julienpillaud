@@ -1,5 +1,8 @@
 from functools import lru_cache
+from typing import Annotated
 
+from fastapi import Depends
+from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, ConfigDict
 from pymongo import AsyncMongoClient
@@ -24,16 +27,27 @@ def get_settings() -> Settings:
 
 
 @lru_cache
-def get_templates(settings: Settings) -> Jinja2Templates:
+def get_templates(
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> Jinja2Templates:
     return Jinja2Templates(directory=settings.paths.templates)
 
 
 @lru_cache
-def get_app_context() -> AppContext:
-    settings = get_settings()
-    client: AsyncMongoClient[MongoDocument] = AsyncMongoClient(settings.mongo_uri)
+def get_repository(
+    request: Request,
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> MongoRepository:
+    client: AsyncMongoClient[MongoDocument] = request.app.state.mongo_client
     database = client[settings.mongo_database]
-    repository = MongoRepository(database=database)
+    return MongoRepository(database=database)
+
+
+@lru_cache
+def get_app_context(
+    settings: Annotated[Settings, Depends(get_settings)],
+    repository: Annotated[MongoRepository, Depends(get_repository)],
+) -> AppContext:
     pdf_converter = GotenbergPDFConverter(host=settings.gotenberg_host)
     return AppContext(
         settings=settings,

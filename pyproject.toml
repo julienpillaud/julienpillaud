@@ -4,24 +4,23 @@ name = "julienpillaud"
 dynamic = ["version"]
 requires-python = ">=3.14"
 dependencies = [
-    "fastapi==0.135.2",
-    "httptools==0.7.1",
-    "httpx==0.28.1",
-    "jinja2==3.1.6",
-    "logfire[fastapi]==4.31.0",
-    "pydantic-settings==2.13.1",
+    "fastapi[standard]==0.136.0",
+    "logfire[fastapi]==4.32.1",
+    "pwdlib[argon2]>=0.3.0",
+    "pyjwt==2.12.1",
     "pymongo==4.16.0",
-    "uvicorn==0.42.0",
-    "uvloop==0.22.1",
 ]
 
 [dependency-groups]
 dev = [
-    "mypy==1.19.1",
+    "mypy==1.20.1",
     "pre-commit==4.5.1",
-    "ruff==0.15.8",
-    "watchfiles==1.1.1",
+    "pytest==9.0.3",
+    "ruff==0.15.11",
 ]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
 
 [tool.ruff]
 output-format = "concise"
@@ -46,3 +45,9 @@ disable_error_code = [
     "prop-decorator"
 ]
 plugins = ['pydantic.mypy']
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+log_cli = true
+log_cli_level = "info"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(name)30s - %(message)s"

@@ -27,7 +27,11 @@ class Settings(BaseSettings):
     environment: AppEnvironment
     logfire_token: str = ""
     paths: AppPaths = AppPaths()
-    api_key: str
+
+    jwt_secret: str
+    jwt_algorithm: str = "HS256"
+    access_token_expire: int
+    refresh_token_expire: int
 
     mongo_user: str
     mongo_password: str
@@ -39,6 +43,9 @@ class Settings(BaseSettings):
     @computed_field
     @property
     def mongo_uri(self) -> str:
+        if self.environment == AppEnvironment.TESTING:
+            return "mongodb://localhost:27017"
+
         pattern = "mongodb+srv://{user}:{password}@{host}"
         return pattern.format(
             user=self.mongo_user,
