@@ -14,7 +14,7 @@ jobs:
 
     services:
       mongodb:
-        image: mongodb:6
+        image: mongodb:8.2
         ports:
           - 27017:27017
 
