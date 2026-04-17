@@ -1,0 +1,19 @@
+<div class="navbar bg-base-100 shadow sticky top-0 z-50">
+
+  <div class="flex-1">
+    <a class="btn btn-primary gap-3" href="{{ url_for('download_pdf') }}">
+      <i class="bi bi-file-earmark text-lg"></i>
+      <span class="text-xs font-semibold uppercase tracking-wider">Version PDF</span>
+    </a>
+    {% if current_user %}
+      <a class="btn btn-accent gap-3" href="{{ url_for('home_admin') }}">
+        <span class="text-xs font-semibold uppercase tracking-wider">Admin</span>
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="flex-none px-2">
+    {% include "swap_theme.html" %}
+  </div>
+
+</div>

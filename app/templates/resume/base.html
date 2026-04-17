@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ resume.metadata.contact.full_name }}
+{% endblock %}
+
+{% block content %}
+  {% include "resume/navbar.html" %}
+  {% include "resume/content.html" %}
+{% endblock %}
