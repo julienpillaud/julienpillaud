@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.0](https://github.com/julienpillaud/julienpillaud/compare/0.14.0...0.15.0) (2026-04-17)
+
+
+### Features
+
+* add authentication ([#39](https://github.com/julienpillaud/julienpillaud/issues/39)) ([7231a51](https://github.com/julienpillaud/julienpillaud/commit/7231a517f602d8c7151cd995a7d247e1ba48609b))
+
 ## [0.14.0](https://github.com/julienpillaud/julienpillaud/compare/0.13.0...0.14.0) (2026-04-15)
 
 
