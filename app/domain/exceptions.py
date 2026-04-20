@@ -18,5 +18,5 @@ class ConflictError(DomainError):
     """Domain error for a 409 HTTP status code."""
 
 
-class UnprocessableEntityError(DomainError):
+class UnprocessableContentError(DomainError):
     """Domain error for a 422 HTTP status code."""

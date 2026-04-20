@@ -1,16 +1,50 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 from fastapi.requests import Request
 from fastapi.responses import Response
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.responses import JSONResponse, PlainTextResponse
 
 from app.api.dependencies.app import get_templates
 from app.api.exceptions import AuthorizationError
 from app.api.logger import logger
 from app.core.settings import Settings
+from app.domain.exceptions import (
+    BadRequestError,
+    ConflictError,
+    DomainError,
+    ForbiddenError,
+    NotFoundError,
+    UnprocessableContentError,
+)
+
+ERROR_MAPPING = {
+    BadRequestError: status.HTTP_400_BAD_REQUEST,
+    ForbiddenError: status.HTTP_403_FORBIDDEN,
+    NotFoundError: status.HTTP_404_NOT_FOUND,
+    ConflictError: status.HTTP_409_CONFLICT,
+    UnprocessableContentError: status.HTTP_422_UNPROCESSABLE_CONTENT,
+}
 
 
 def add_exception_handlers(app: FastAPI, settings: Settings) -> None:
     templates = get_templates(settings=settings)
+
+    @app.exception_handler(DomainError)
+    async def domain_exception_handler(
+        request: Request,
+        exc: DomainError,
+    ) -> Response:
+        for error in type(exc).mro():
+            if error in ERROR_MAPPING:
+                return JSONResponse(
+                    status_code=ERROR_MAPPING[error],
+                    content={"detail": str(exc)},
+                )
+
+        return PlainTextResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content="Internal Server Error",
+        )
 
     @app.exception_handler(AuthorizationError)
     async def auth_exception_handler(

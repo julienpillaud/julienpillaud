@@ -6,7 +6,7 @@ from functools import lru_cache
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from pymongo.synchronous.mongo_client import MongoClient
+from pymongo.database import Database
 
 from app.api.app import create_fastapi_app
 from app.api.dependencies.app import get_settings
@@ -38,12 +38,7 @@ def settings() -> Settings:
 
 
 @pytest.fixture
-def user(settings: Settings) -> Iterator[User]:
-    client: MongoClient[MongoDocument] = MongoClient(
-        settings.mongo_uri,
-        uuidRepresentation="standard",
-    )
-    database = client[settings.mongo_database]
+def user(settings: Settings, database: Database[MongoDocument]) -> User:
     user_id = uuid.uuid7()
     user = User(
         id=user_id,
@@ -57,11 +52,7 @@ def user(settings: Settings) -> Iterator[User]:
             "hashed_password": user.hashed_password,
         }
     )
-    yield user
-
-    database["users"].delete_many({})
-    database["refresh_tokens"].delete_many({})
-    client.close()
+    return user
 
 
 @pytest.fixture(scope="session")
