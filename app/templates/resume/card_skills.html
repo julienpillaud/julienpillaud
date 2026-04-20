@@ -1,12 +1,12 @@
 <h2 class="card-title uppercase opacity-50">Compétences</h2>
 <ul class="space-y-3">
-  {% for category, techs in resume.skills.items() %}
+  {% for skill_summary in resume.skills %}
     <li>
-      <p class="text-sm font-medium mb-2">{{ category }}</p>
+      <p class="text-sm font-medium mb-2">{{ skill_summary.category_name }}</p>
       <div class="flex flex-wrap gap-2">
-        {% for tech in techs %}
+        {% for skill in skill_summary.skills %}
           <span class="px-2 py-0 text-primary rounded border border-primary">
-            {{ tech.technology }}
+            {{ skill.name }}
           </span>
         {% endfor %}
       </div>

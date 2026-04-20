@@ -1,27 +1,12 @@
-from collections import defaultdict
-
 from app.domain.repository import RepositoryProtocol
-from app.domain.resume.entities import Resume, Skill
+from app.domain.resume.entities import Resume
+from app.domain.skills.commands import get_skills_command
 
 
-async def get_raw_skills(repository: RepositoryProtocol, /) -> list[Skill]:
-    return await repository.get_skills()
-
-
-async def get_skills(repository: RepositoryProtocol, /) -> dict[str, list[Skill]]:
-    raw_skills = await repository.get_skills()
-
-    skills = defaultdict(list)
-    for skill in raw_skills:
-        skills[skill.category.name].append(skill)
-
-    return dict(skills)
-
-
-async def get_resume(repository: RepositoryProtocol, /) -> Resume:
+async def get_resume_command(repository: RepositoryProtocol, /) -> Resume:
     metadata = await repository.get_metadata()
     experiences = await repository.get_experiences()
-    skills = await get_skills(repository)
+    skills = await get_skills_command(repository)
     return Resume(
         metadata=metadata,
         skills=skills,
