@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://github.com/julienpillaud/julienpillaud/compare/0.15.0...0.16.0) (2026-04-21)
+
+
+### Features
+
+* add skills management ([#41](https://github.com/julienpillaud/julienpillaud/issues/41)) ([4f3fd4b](https://github.com/julienpillaud/julienpillaud/commit/4f3fd4b62c61426e5d8cec275973871d49512b3b))
+
 ## [0.15.0](https://github.com/julienpillaud/julienpillaud/compare/0.14.0...0.15.0) (2026-04-17)
 
 
