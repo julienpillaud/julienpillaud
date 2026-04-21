@@ -1,4 +1,5 @@
 import datetime
+from typing import Any
 
 from pydantic import BaseModel, computed_field
 
@@ -27,17 +28,6 @@ class Language(BaseModel):
     name: str
     level: str
     optional: bool
-
-
-class SkillCategory(BaseModel):
-    name: str
-    display_order: int
-
-
-class Skill(BaseModel):
-    category: SkillCategory
-    technology: str
-    display_order: int
 
 
 class Metadata(BaseModel):
@@ -90,5 +80,5 @@ class Experience(BaseModel):
 
 class Resume(BaseModel):
     metadata: Metadata
-    skills: dict[str, list[Skill]]
+    skills: Any
     experiences: list[Experience]

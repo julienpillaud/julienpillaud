@@ -8,3 +8,20 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("theme", selectedTheme);
   })
 });
+
+window.showToast = (message, options = {}) => {
+  const {
+    type = "error",
+    timeout = 5000,
+  } = options;
+
+  const container = document.getElementById("toastContainer");
+  const toast = document.createElement("div");
+  toast.className = `alert alert-${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, timeout);
+};

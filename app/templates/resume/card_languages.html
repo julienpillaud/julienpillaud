@@ -1,4 +1,4 @@
-<h2 class="card-title uppercase opacity-50">Langue</h2>
+<h2 class="card-title uppercase opacity-50">Langues</h2>
 {% for language in resume.metadata.sort_languages %}
   {% if not language.optional %}
     <p class="text-sm font-medium mb-2">{{ language.name }} : {{ language.level }}</p>

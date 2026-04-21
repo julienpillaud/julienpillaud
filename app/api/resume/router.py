@@ -7,7 +7,7 @@ from fastapi.responses import HTMLResponse, StreamingResponse
 from app.api.dependencies.app import AppContext, get_app_context
 from app.api.dependencies.user import get_optional_current_user
 from app.domain.admin.entities import UserExternal
-from app.domain.resume.commands import get_resume
+from app.domain.resume.commands import get_resume_command
 
 router = APIRouter()
 
@@ -18,7 +18,7 @@ async def home(
     current_user: Annotated[UserExternal | None, Depends(get_optional_current_user)],
     context: Annotated[AppContext, Depends(get_app_context)],
 ) -> HTMLResponse:
-    resume = await get_resume(context.repository)
+    resume = await get_resume_command(context.repository)
     return context.templates.TemplateResponse(
         request=request,
         name="resume/base.html",
@@ -34,7 +34,7 @@ async def home(
 async def download_pdf(
     context: Annotated[AppContext, Depends(get_app_context)],
 ) -> StreamingResponse:
-    resume = await get_resume(context.repository)
+    resume = await get_resume_command(context.repository)
     html = context.templates.get_template("resume/pdf.html").render(
         {"format": "pdf", "resume": resume}
     )
