@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Skills{% endblock %}
+
+{% block content %}
+  {% include "navbar.html" %}
+
+  <main
+    class="max-w-2xl mx-auto flex flex-col gap-2 px-2 py-2"
+    x-data="adminSkills"
+  >
+    <!-- ===================================================================== -->
+    <div class="flex justify-end">
+      <button class="btn btn-sm btn-primary" @click="addCategory()">
+        <i class="bi bi-plus-lg"></i>
+        Nouvelle catégorie
+      </button>
+    </div>
+    <!-- ===================================================================== -->
+    <div class="flex flex-col gap-2" x-sort="sortCategories">
+      <template x-for="category in categories" :key="category.id">
+        <div
+          class="card bg-base-200 border border-base-300"
+          x-sort:item="category.id"
+        >
+          <!-- ------------------------------------------------------------- -->
+          <div class="card-body p-3">
+            <div class="flex gap-2 items-center group">
+              <!-- Sort button -->
+              <button class="cursor-move p-1" x-sort:handle>
+                <i class="bi bi-grip-vertical"></i>
+              </button>
+              <!-- Collapse button -->
+              <button class="btn btn-square btn-sm cursor-pointer p-1" @click="openCategory(category)">
+                <i
+                  class="bi bi-chevron-right transition-transform duration-200"
+                  :class="{ 'rotate-90': ui[category.id].open }"
+                >
+                </i>
+              </button>
+              <!-- Category Name -->
+              <span
+                class="text-base font-semibold flex-1"
+                x-text="category.name"
+                x-show="!ui[category.id].editing"
+              >
+              </span>
+              <template x-if="ui[category.id].editing">
+                <input
+                  type="text"
+                  class="input input-sm flex-1"
+                  x-model="ui[category.id].editName"
+                  x-effect="$nextTick(() => $el.focus())"
+                  @keydown.enter="saveCategory(category)"
+                  @blur="saveCategory(category)"
+                  @keydown.escape="cancelCategory(category)"
+                />
+              </template>
+              <!-- Actions buttons -->
+              <div class="opacity-0 group-hover:opacity-100 flex gap-1">
+                <button
+                  class="btn btn-square btn-sm btn-primary"
+                  @click="editCategory(category)"
+                >
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button
+                  class="btn btn-square btn-sm btn-error"
+                  @click="removeCategory(category)"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+              <!-- ---------------- -->
+            </div>
+            <!-- Collapsable content -->
+            <div x-show="ui[category.id].open" x-collapse.duration.100ms>
+              {% include "skills_content.html" %}
+            </div>
+          </div>
+          <!-- ------------------------------------------------------------- -->
+        </div>
+      </template>
+    </div>
+    <!-- ===================================================================== -->
+  </main>
+
+{% endblock %}

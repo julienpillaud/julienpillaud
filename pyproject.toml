@@ -36,6 +36,9 @@ select = [
     "PL", # Pylint
     "RUF",
 ]
+ignore = [
+    "SIM117", # multiple-with-statements
+]
 
 [tool.mypy]
 strict = true

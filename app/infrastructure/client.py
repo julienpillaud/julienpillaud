@@ -2,7 +2,7 @@ from pymongo import AsyncMongoClient
 
 from app.core.settings import Settings
 from app.infrastructure.logger import logger
-from app.infrastructure.repository import MongoDocument
+from app.infrastructure.utils import MongoDocument
 
 
 def create_mongo_client(settings: Settings) -> AsyncMongoClient[MongoDocument]:

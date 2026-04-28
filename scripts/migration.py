@@ -5,7 +5,7 @@ from pymongo.asynchronous.database import AsyncDatabase
 from pymongo.asynchronous.mongo_client import AsyncMongoClient
 
 from app.core.settings import Settings
-from app.infrastructure.repository import MongoDocument
+from app.infrastructure.utils import MongoDocument
 
 
 async def copy_collection(
@@ -25,6 +25,9 @@ async def run(settings: Settings, args: argparse.Namespace) -> None:
         dst_db = client[args.dst]
 
         collections = await src_db.list_collection_names()
+        collections = [
+            col for col in collections if col not in {"users", "refresh_tokens"}
+        ]
 
         await asyncio.gather(
             *[

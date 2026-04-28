@@ -3,7 +3,7 @@ from typing import Protocol
 from app.domain.admin.entities import RefreshToken, RefreshTokenExternal, User
 from app.domain.entities import EntityId
 from app.domain.resume.entities import Experience, Metadata
-from app.domain.skills.entities import Skill, SkillCategory
+from app.domain.skills.entities import EntityReorder, Skill, SkillCategory
 
 
 class RepositoryProtocol(Protocol):
@@ -27,20 +27,41 @@ class RepositoryProtocol(Protocol):
     # experiences
     async def get_experiences(self) -> list[Experience]: ...
 
-    # skills
-    async def get_skills(self) -> list[Skill]: ...
-
+    # --------------------------------------------------------------------------
+    # Skill
     async def get_skill(self, skill_id: EntityId) -> Skill | None: ...
 
     async def create_skill(self, entity: Skill, /) -> Skill: ...
 
-    async def update_skill(self, entity: Skill, /) -> Skill: ...
+    async def reorder_skills(self, entities: list[EntityReorder], /) -> None: ...
 
     async def delete_skill(self, entity: Skill, /) -> None: ...
 
-    async def delete_skills_by_category(self, category_id: EntityId) -> None: ...
+    # --------------------------------------------------------------------------
+    # SkillCategory
+    async def get_skill_categories(self) -> list[SkillCategory]: ...
 
-    async def get_category_by_id(
+    async def get_skill_category(
         self,
         category_id: EntityId,
     ) -> SkillCategory | None: ...
+
+    async def create_skill_category(
+        self,
+        entity: SkillCategory,
+        /,
+    ) -> SkillCategory: ...
+
+    async def update_skill_category(
+        self,
+        entity: SkillCategory,
+        /,
+    ) -> SkillCategory: ...
+
+    async def reorder_skill_categories(
+        self,
+        entities: list[EntityReorder],
+        /,
+    ) -> None: ...
+
+    async def delete_skill_category(self, entity: SkillCategory, /) -> None: ...
