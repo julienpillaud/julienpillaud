@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.0](https://github.com/julienpillaud/julienpillaud/compare/0.16.0...0.17.0) (2026-04-28)
+
+
+### Features
+
+* refactor skills edition ([#43](https://github.com/julienpillaud/julienpillaud/issues/43)) ([ca1281f](https://github.com/julienpillaud/julienpillaud/commit/ca1281f6e214f63ea4e9cea5a3a828b670f2677a))
+
 ## [0.16.0](https://github.com/julienpillaud/julienpillaud/compare/0.15.0...0.16.0) (2026-04-21)
 
 
