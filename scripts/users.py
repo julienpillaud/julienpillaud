@@ -7,7 +7,7 @@ from pymongo.asynchronous.mongo_client import AsyncMongoClient
 from app.core.settings import Settings
 from app.domain.admin.entities import User
 from app.domain.security import get_password_hash
-from app.infrastructure.repository import MongoDocument
+from app.infrastructure.utils import MongoDocument
 
 
 async def run(settings: Settings, args: argparse.Namespace) -> None:

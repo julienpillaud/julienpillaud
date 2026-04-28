@@ -14,7 +14,7 @@ from app.api.security import generate_tokens
 from app.core.settings import AppEnvironment, Settings
 from app.domain.admin.entities import User
 from app.domain.security import get_password_hash
-from app.infrastructure.repository import MongoDocument
+from app.infrastructure.utils import MongoDocument
 
 
 @lru_cache

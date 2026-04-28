@@ -1,7 +1,7 @@
 import pytest
 from pymongo.database import Database
 
-from app.infrastructure.repository import MongoDocument
+from app.infrastructure.utils import MongoDocument
 from tests.factories.skills import SkillFactory
 
 

@@ -3,26 +3,16 @@ from pydantic import BaseModel
 from app.domain.entities import DomainEntity, EntityId
 
 
+class Skill(DomainEntity):
+    name: str
+    display_order: int
+    category_id: EntityId
+
+
 class SkillCategory(DomainEntity):
     name: str
     display_order: int
-
-
-class Skill(DomainEntity):
-    category: SkillCategory
-    name: str
-    display_order: int
-
-
-class SkillItem(BaseModel):
-    id: EntityId
-    name: str
-
-
-class SkillSummary(BaseModel):
-    id: EntityId
-    category_name: str
-    skills: list[SkillItem]
+    skills: list[Skill]
 
 
 class SkillCategoryCreate(BaseModel):
@@ -37,5 +27,10 @@ class SkillCreate(BaseModel):
     display_order: int
 
 
-class SkillUpdate(BaseModel):
+class SkillCategoryUpdate(BaseModel):
     name: str
+
+
+class EntityReorder(BaseModel):
+    id: EntityId
+    display_order: int

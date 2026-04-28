@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     @property
     def mongo_uri(self) -> str:
         if self.environment == AppEnvironment.TESTING:
-            return "mongodb://localhost:27017"
+            return "mongodb://localhost:27017?replicaSet=rs0"
 
         pattern = "mongodb+srv://{user}:{password}@{host}"
         return pattern.format(

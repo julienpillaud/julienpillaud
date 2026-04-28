@@ -6,12 +6,19 @@ from fastapi.responses import RedirectResponse, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.auth.utils import build_login_response
-from app.api.dependencies.app import AppContext, get_app_context
+from app.api.dependencies.app import (
+    AppContext,
+    get_app_context,
+    get_repository,
+    get_settings,
+)
 from app.api.dependencies.user import get_current_user, get_optional_current_user
 from app.api.logger import logger
+from app.core.settings import Settings
 from app.domain.admin.commands import authenticate_user, revoke_all_tokens_for_user
 from app.domain.admin.entities import UserExternal
 from app.domain.exceptions import ForbiddenError, NotFoundError
+from app.infrastructure.repository import MongoRepository
 
 router = APIRouter(prefix="/auth")
 
@@ -38,11 +45,12 @@ async def get_login(
 @router.post("")
 async def post_login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    context: Annotated[AppContext, Depends(get_app_context)],
+    settings: Annotated[Settings, Depends(get_settings)],
+    repository: Annotated[MongoRepository, Depends(get_repository)],
 ) -> Response:
     try:
         current_user = await authenticate_user(
-            context.repository,
+            repository,
             username=form_data.username,
             password=form_data.password,
         )
@@ -53,15 +61,19 @@ async def post_login(
         return response
 
     logger.info(f"User {current_user.id} logged in")
-    return await build_login_response(context=context, user_id=current_user.id)
+    return await build_login_response(
+        settings=settings,
+        repository=repository,
+        user_id=current_user.id,
+    )
 
 
 @router.post("/logout")
 async def logout(
     current_user: Annotated[UserExternal, Depends(get_current_user)],
-    context: Annotated[AppContext, Depends(get_app_context)],
+    repository: Annotated[MongoRepository, Depends(get_repository)],
 ) -> Response:
-    await revoke_all_tokens_for_user(context.repository, user_id=current_user.id)
+    await revoke_all_tokens_for_user(repository, user_id=current_user.id)
 
     response = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     response.delete_cookie(key="access_token")

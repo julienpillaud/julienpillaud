@@ -2,28 +2,41 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, status
 
-from app.api.dependencies.app import AppContext, get_app_context
+from app.api.dependencies.app import get_repository
 from app.api.dependencies.user import get_current_user
 from app.domain.entities import EntityId
-from app.domain.skills.commands import (
+from app.domain.skills.commands.categories import (
+    delete_skill_category_command,
+    reorder_skill_categories_command,
+    update_skill_category_command,
+)
+from app.domain.skills.commands.skills import (
     create_skill_command,
     delete_skill_command,
-    delete_skills_by_category_command,
-    get_skills_command,
-    update_skill_command,
+    get_skill_categories_command,
+    reorder_skills_command,
 )
-from app.domain.skills.entities import Skill, SkillCreate, SkillSummary, SkillUpdate
+from app.domain.skills.entities import (
+    EntityReorder,
+    Skill,
+    SkillCategory,
+    SkillCategoryUpdate,
+    SkillCreate,
+)
+from app.infrastructure.repository import MongoRepository
 
 router = APIRouter(prefix="/skills")
 
 
 @router.get(
     "",
-    response_model=list[SkillSummary],
+    response_model=list[SkillCategory],
     dependencies=[Depends(get_current_user)],
 )
-async def get_skills(context: Annotated[AppContext, Depends(get_app_context)]) -> Any:
-    return await get_skills_command(context.repository)
+async def get_skill_categories(
+    repository: Annotated[MongoRepository, Depends(get_repository)],
+) -> Any:
+    return await get_skill_categories_command(repository)
 
 
 @router.post(
@@ -33,23 +46,10 @@ async def get_skills(context: Annotated[AppContext, Depends(get_app_context)]) -
     dependencies=[Depends(get_current_user)],
 )
 async def create_skill(
-    context: Annotated[AppContext, Depends(get_app_context)],
+    repository: Annotated[MongoRepository, Depends(get_repository)],
     data: SkillCreate,
 ) -> Any:
-    return await create_skill_command(context.repository, data=data)
-
-
-@router.patch(
-    "/{skill_id}",
-    response_model=Skill,
-    dependencies=[Depends(get_current_user)],
-)
-async def update_skill(
-    context: Annotated[AppContext, Depends(get_app_context)],
-    skill_id: EntityId,
-    data: SkillUpdate,
-) -> Any:
-    return await update_skill_command(context.repository, skill_id=skill_id, data=data)
+    return await create_skill_command(repository, data=data)
 
 
 @router.delete(
@@ -58,10 +58,51 @@ async def update_skill(
     dependencies=[Depends(get_current_user)],
 )
 async def delete_skill(
-    context: Annotated[AppContext, Depends(get_app_context)],
+    repository: Annotated[MongoRepository, Depends(get_repository)],
     skill_id: EntityId,
 ) -> None:
-    await delete_skill_command(context.repository, skill_id=skill_id)
+    await delete_skill_command(repository, skill_id=skill_id)
+
+
+@router.patch(
+    "/reorder",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(get_current_user)],
+)
+async def reorder_skills(
+    repository: Annotated[MongoRepository, Depends(get_repository)],
+    data: list[EntityReorder],
+) -> None:
+    await reorder_skills_command(repository, data=data)
+
+
+@router.patch(
+    "/categories/reorder",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(get_current_user)],
+)
+async def reorder_skill_categories(
+    repository: Annotated[MongoRepository, Depends(get_repository)],
+    data: list[EntityReorder],
+) -> None:
+    await reorder_skill_categories_command(repository, data=data)
+
+
+@router.patch(
+    "/categories/{category_id}",
+    response_model=SkillCategory,
+    dependencies=[Depends(get_current_user)],
+)
+async def update_skill_category(
+    repository: Annotated[MongoRepository, Depends(get_repository)],
+    category_id: EntityId,
+    data: SkillCategoryUpdate,
+) -> Any:
+    return await update_skill_category_command(
+        repository,
+        category_id=category_id,
+        data=data,
+    )
 
 
 @router.delete(
@@ -69,8 +110,8 @@ async def delete_skill(
     status_code=status.HTTP_204_NO_CONTENT,
     dependencies=[Depends(get_current_user)],
 )
-async def delete_skills_by_category(
-    context: Annotated[AppContext, Depends(get_app_context)],
+async def delete_skill_category(
+    repository: Annotated[MongoRepository, Depends(get_repository)],
     category_id: EntityId,
 ) -> None:
-    await delete_skills_by_category_command(context.repository, category_id=category_id)
+    await delete_skill_category_command(repository, category_id=category_id)
