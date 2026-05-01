@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://github.com/julienpillaud/julienpillaud/compare/0.17.0...0.18.0) (2026-05-01)
+
+
+### Features
+
+* add domain context ([#45](https://github.com/julienpillaud/julienpillaud/issues/45)) ([6291755](https://github.com/julienpillaud/julienpillaud/commit/62917558217492d6b99975ff54ec73281c4fff21))
+
 ## [0.17.0](https://github.com/julienpillaud/julienpillaud/compare/0.16.0...0.17.0) (2026-04-28)
 
 
