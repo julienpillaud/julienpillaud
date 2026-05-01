@@ -1,8 +1,8 @@
 import uuid
 
+from app.domain.context import ContextProtocol
 from app.domain.entities import EntityId
 from app.domain.exceptions import NotFoundError
-from app.domain.repository import RepositoryProtocol
 from app.domain.skills.entities import (
     EntityReorder,
     SkillCategory,
@@ -12,12 +12,12 @@ from app.domain.skills.entities import (
 
 
 async def get_or_create_skill_category_command(
-    repository: RepositoryProtocol,
+    context: ContextProtocol,
     /,
     data: SkillCreate,
 ) -> SkillCategory:
     if data.category.id:
-        category = await repository.get_skill_category(data.category.id)
+        category = await context.repository.get_skill_category(data.category.id)
         if not category:
             raise NotFoundError(f"Category {data.category.id} not found")
 
@@ -29,39 +29,39 @@ async def get_or_create_skill_category_command(
         display_order=data.category.display_order,
         skills=[],
     )
-    return await repository.create_skill_category(category)
+    return await context.repository.create_skill_category(category)
 
 
 async def update_skill_category_command(
-    repository: RepositoryProtocol,
+    context: ContextProtocol,
     /,
     category_id: EntityId,
     data: SkillCategoryUpdate,
 ) -> SkillCategory:
-    category = await repository.get_skill_category(category_id=category_id)
+    category = await context.repository.get_skill_category(category_id=category_id)
     if not category:
         raise NotFoundError(f"Category {category_id} not found")
 
     category.name = data.name
 
-    return await repository.update_skill_category(category)
+    return await context.repository.update_skill_category(category)
 
 
 async def reorder_skill_categories_command(
-    repository: RepositoryProtocol,
+    context: ContextProtocol,
     /,
     data: list[EntityReorder],
 ) -> None:
-    await repository.reorder_skill_categories(data)
+    await context.repository.reorder_skill_categories(data)
 
 
 async def delete_skill_category_command(
-    repository: RepositoryProtocol,
+    context: ContextProtocol,
     /,
     category_id: EntityId,
 ) -> None:
-    category = await repository.get_skill_category(category_id=category_id)
+    category = await context.repository.get_skill_category(category_id=category_id)
     if not category:
         raise NotFoundError(f"Category {category_id} not found")
 
-    await repository.delete_skill_category(category)
+    await context.repository.delete_skill_category(category)

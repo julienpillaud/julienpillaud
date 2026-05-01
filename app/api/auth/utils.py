@@ -4,13 +4,13 @@ from fastapi.responses import RedirectResponse
 from app.api.security import generate_tokens
 from app.api.utils import set_cookie
 from app.core.settings import Settings
+from app.domain.context import ContextProtocol
 from app.domain.entities import EntityId
-from app.infrastructure.repository import MongoRepository
 
 
 async def build_login_response(
     settings: Settings,
-    repository: MongoRepository,
+    context: ContextProtocol,
     user_id: EntityId,
 ) -> Response:
     # Generate tokens
@@ -20,7 +20,7 @@ async def build_login_response(
     )
 
     # Save refresh token in database
-    await repository.save_token(refresh_token)
+    await context.repository.save_token(refresh_token)
 
     # Create response with cookies
     response = RedirectResponse(url="/admin", status_code=status.HTTP_303_SEE_OTHER)

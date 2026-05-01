@@ -1,9 +1,9 @@
 import datetime
-from typing import Any
 
 from pydantic import BaseModel, computed_field
 
 from app.domain.data import MONTHS_MAP
+from app.domain.skills.entities import SkillCategory
 
 
 class ContactInfo(BaseModel):
@@ -80,5 +80,5 @@ class Experience(BaseModel):
 
 class Resume(BaseModel):
     metadata: Metadata
-    skills: Any
+    skills: list[SkillCategory]
     experiences: list[Experience]

@@ -3,12 +3,13 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse, StreamingResponse
+from starlette.templating import Jinja2Templates
 
-from app.api.dependencies.app import AppContext, get_app_context, get_repository
+from app.api.dependencies.app import get_context, get_templates
 from app.api.dependencies.user import get_optional_current_user
+from app.core.context import Context
 from app.domain.admin.entities import UserExternal
 from app.domain.resume.commands import get_resume_command
-from app.infrastructure.repository import MongoRepository
 
 router = APIRouter()
 
@@ -17,11 +18,11 @@ router = APIRouter()
 async def home(
     request: Request,
     current_user: Annotated[UserExternal | None, Depends(get_optional_current_user)],
-    context: Annotated[AppContext, Depends(get_app_context)],
-    repository: Annotated[MongoRepository, Depends(get_repository)],
+    templates: Annotated[Jinja2Templates, Depends(get_templates)],
+    context: Annotated[Context, Depends(get_context)],
 ) -> HTMLResponse:
-    resume = await get_resume_command(repository)
-    return context.templates.TemplateResponse(
+    resume = await get_resume_command(context)
+    return templates.TemplateResponse(
         request=request,
         name="resume/base.html",
         context={
@@ -34,11 +35,11 @@ async def home(
 
 @router.get("/pdf/download")
 async def download_pdf(
-    context: Annotated[AppContext, Depends(get_app_context)],
-    repository: Annotated[MongoRepository, Depends(get_repository)],
+    templates: Annotated[Jinja2Templates, Depends(get_templates)],
+    context: Annotated[Context, Depends(get_context)],
 ) -> StreamingResponse:
-    resume = await get_resume_command(repository)
-    html = context.templates.get_template("resume/pdf.html").render(
+    resume = await get_resume_command(context)
+    html = templates.get_template("resume/pdf.html").render(
         {"format": "pdf", "resume": resume}
     )
     name = resume.metadata.contact.full_name.lower().replace(" ", "-")
