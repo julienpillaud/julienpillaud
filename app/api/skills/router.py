@@ -2,8 +2,9 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, status
 
-from app.api.dependencies.app import get_repository
+from app.api.dependencies.app import get_context
 from app.api.dependencies.user import get_current_user
+from app.core.context import Context
 from app.domain.entities import EntityId
 from app.domain.skills.commands.categories import (
     delete_skill_category_command,
@@ -23,7 +24,6 @@ from app.domain.skills.entities import (
     SkillCategoryUpdate,
     SkillCreate,
 )
-from app.infrastructure.repository import MongoRepository
 
 router = APIRouter(prefix="/skills")
 
@@ -34,9 +34,9 @@ router = APIRouter(prefix="/skills")
     dependencies=[Depends(get_current_user)],
 )
 async def get_skill_categories(
-    repository: Annotated[MongoRepository, Depends(get_repository)],
+    context: Annotated[Context, Depends(get_context)],
 ) -> Any:
-    return await get_skill_categories_command(repository)
+    return await get_skill_categories_command(context)
 
 
 @router.post(
@@ -46,10 +46,10 @@ async def get_skill_categories(
     dependencies=[Depends(get_current_user)],
 )
 async def create_skill(
-    repository: Annotated[MongoRepository, Depends(get_repository)],
+    context: Annotated[Context, Depends(get_context)],
     data: SkillCreate,
 ) -> Any:
-    return await create_skill_command(repository, data=data)
+    return await create_skill_command(context, data=data)
 
 
 @router.delete(
@@ -58,10 +58,10 @@ async def create_skill(
     dependencies=[Depends(get_current_user)],
 )
 async def delete_skill(
-    repository: Annotated[MongoRepository, Depends(get_repository)],
+    context: Annotated[Context, Depends(get_context)],
     skill_id: EntityId,
 ) -> None:
-    await delete_skill_command(repository, skill_id=skill_id)
+    await delete_skill_command(context, skill_id=skill_id)
 
 
 @router.patch(
@@ -70,10 +70,10 @@ async def delete_skill(
     dependencies=[Depends(get_current_user)],
 )
 async def reorder_skills(
-    repository: Annotated[MongoRepository, Depends(get_repository)],
+    context: Annotated[Context, Depends(get_context)],
     data: list[EntityReorder],
 ) -> None:
-    await reorder_skills_command(repository, data=data)
+    await reorder_skills_command(context, data=data)
 
 
 @router.patch(
@@ -82,10 +82,10 @@ async def reorder_skills(
     dependencies=[Depends(get_current_user)],
 )
 async def reorder_skill_categories(
-    repository: Annotated[MongoRepository, Depends(get_repository)],
+    context: Annotated[Context, Depends(get_context)],
     data: list[EntityReorder],
 ) -> None:
-    await reorder_skill_categories_command(repository, data=data)
+    await reorder_skill_categories_command(context, data=data)
 
 
 @router.patch(
@@ -94,12 +94,12 @@ async def reorder_skill_categories(
     dependencies=[Depends(get_current_user)],
 )
 async def update_skill_category(
-    repository: Annotated[MongoRepository, Depends(get_repository)],
+    context: Annotated[Context, Depends(get_context)],
     category_id: EntityId,
     data: SkillCategoryUpdate,
 ) -> Any:
     return await update_skill_category_command(
-        repository,
+        context,
         category_id=category_id,
         data=data,
     )
@@ -111,7 +111,7 @@ async def update_skill_category(
     dependencies=[Depends(get_current_user)],
 )
 async def delete_skill_category(
-    repository: Annotated[MongoRepository, Depends(get_repository)],
+    context: Annotated[Context, Depends(get_context)],
     category_id: EntityId,
 ) -> None:
-    await delete_skill_category_command(repository, category_id=category_id)
+    await delete_skill_category_command(context, category_id=category_id)

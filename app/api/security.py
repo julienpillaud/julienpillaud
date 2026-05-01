@@ -10,8 +10,8 @@ from app.api.logger import logger
 from app.core.settings import Settings
 from app.domain.admin.commands import revoke_all_tokens_for_user
 from app.domain.admin.entities import RefreshTokenExternal, hash_token
+from app.domain.context import ContextProtocol
 from app.domain.entities import EntityId
-from app.domain.repository import RepositoryProtocol
 
 
 class TokenPayload(BaseModel):
@@ -93,25 +93,27 @@ def generate_refresh_token(
 
 async def rotate_refresh_token(
     settings: Settings,
-    repository: RepositoryProtocol,
+    context: ContextProtocol,
     refresh_token: str,
 ) -> RefreshTokenExternal:
-    previous_token = await repository.get_token_by_hash(hash_token(refresh_token))
+    previous_token = await context.repository.get_token_by_hash(
+        hash_token(refresh_token)
+    )
     if not previous_token:
         logger.warning("Invalid refresh token")
         raise InvalidRefreshToken("Invalid refresh token")
 
     if previous_token.revoked_at:
-        await revoke_all_tokens_for_user(repository, user_id=previous_token.user_id)
+        await revoke_all_tokens_for_user(context, user_id=previous_token.user_id)
         logger.error("Refresh token reuse detected")
         raise InvalidRefreshToken("Refresh token reuse detected")
 
-    await repository.revoke_token(token_id=previous_token.id)
+    await context.repository.revoke_token(token_id=previous_token.id)
 
     new_token = generate_refresh_token(
         settings=settings,
         user_id=previous_token.user_id,
         current_date=datetime.datetime.now(datetime.UTC),
     )
-    await repository.save_token(new_token)
+    await context.repository.save_token(new_token)
     return new_token

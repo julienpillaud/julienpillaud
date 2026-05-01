@@ -5,22 +5,12 @@ from typing import Annotated
 from fastapi import Depends
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel, ConfigDict
 from pymongo import AsyncMongoClient
 from pymongo.asynchronous.client_session import AsyncClientSession
 
+from app.core.context import Context
 from app.core.settings import Settings
-from app.infrastructure.pdf_converter import GotenbergPDFConverter
-from app.infrastructure.repository import MongoRepository
 from app.infrastructure.utils import MongoDocument
-
-
-class AppContext(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    settings: Settings
-    templates: Jinja2Templates
-    pdf_converter: GotenbergPDFConverter
 
 
 @lru_cache
@@ -42,23 +32,14 @@ async def get_session(request: Request) -> AsyncIterator[AsyncClientSession]:
             yield session
 
 
-def get_repository(
+def get_context(
     request: Request,
     settings: Annotated[Settings, Depends(get_settings)],
     session: Annotated[AsyncClientSession, Depends(get_session)],
-) -> MongoRepository:
+) -> Context:
     client: AsyncMongoClient[MongoDocument] = request.app.state.mongo_client
-    return MongoRepository(
+    return Context(
+        settings=settings,
         database=client[settings.mongo_database],
         session=session,
-    )
-
-
-@lru_cache
-def get_app_context(settings: Annotated[Settings, Depends(get_settings)]) -> AppContext:
-    pdf_converter = GotenbergPDFConverter(host=settings.gotenberg_host)
-    return AppContext(
-        settings=settings,
-        templates=get_templates(settings=settings),
-        pdf_converter=pdf_converter,
     )

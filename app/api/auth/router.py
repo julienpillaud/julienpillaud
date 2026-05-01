@@ -4,21 +4,17 @@ from fastapi import APIRouter, Depends, status
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, Response
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.templating import Jinja2Templates
 
 from app.api.auth.utils import build_login_response
-from app.api.dependencies.app import (
-    AppContext,
-    get_app_context,
-    get_repository,
-    get_settings,
-)
+from app.api.dependencies.app import get_context, get_settings, get_templates
 from app.api.dependencies.user import get_current_user, get_optional_current_user
 from app.api.logger import logger
+from app.core.context import Context
 from app.core.settings import Settings
 from app.domain.admin.commands import authenticate_user, revoke_all_tokens_for_user
 from app.domain.admin.entities import UserExternal
 from app.domain.exceptions import ForbiddenError, NotFoundError
-from app.infrastructure.repository import MongoRepository
 
 router = APIRouter(prefix="/auth")
 
@@ -27,13 +23,13 @@ router = APIRouter(prefix="/auth")
 async def get_login(
     request: Request,
     current_user: Annotated[UserExternal | None, Depends(get_optional_current_user)],
-    context: Annotated[AppContext, Depends(get_app_context)],
+    templates: Annotated[Jinja2Templates, Depends(get_templates)],
 ) -> Response:
     if current_user:
         return RedirectResponse(url="/admin", status_code=status.HTTP_302_FOUND)
 
     message = request.cookies.pop("message", None)
-    response = context.templates.TemplateResponse(
+    response = templates.TemplateResponse(
         request=request,
         name="login.html",
         context={"error": message},
@@ -46,11 +42,11 @@ async def get_login(
 async def post_login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     settings: Annotated[Settings, Depends(get_settings)],
-    repository: Annotated[MongoRepository, Depends(get_repository)],
+    context: Annotated[Context, Depends(get_context)],
 ) -> Response:
     try:
         current_user = await authenticate_user(
-            repository,
+            context,
             username=form_data.username,
             password=form_data.password,
         )
@@ -63,7 +59,7 @@ async def post_login(
     logger.info(f"User {current_user.id} logged in")
     return await build_login_response(
         settings=settings,
-        repository=repository,
+        context=context,
         user_id=current_user.id,
     )
 
@@ -71,9 +67,9 @@ async def post_login(
 @router.post("/logout")
 async def logout(
     current_user: Annotated[UserExternal, Depends(get_current_user)],
-    repository: Annotated[MongoRepository, Depends(get_repository)],
+    context: Annotated[Context, Depends(get_context)],
 ) -> Response:
-    await revoke_all_tokens_for_user(repository, user_id=current_user.id)
+    await revoke_all_tokens_for_user(context, user_id=current_user.id)
 
     response = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     response.delete_cookie(key="access_token")
