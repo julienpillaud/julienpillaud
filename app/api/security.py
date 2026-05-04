@@ -8,7 +8,7 @@ from pydantic import BaseModel, ValidationError
 from app.api.exceptions import InvalidAccessToken, InvalidRefreshToken
 from app.api.logger import logger
 from app.core.settings import Settings
-from app.domain.admin.commands import revoke_all_tokens_for_user
+from app.domain.admin.commands import logout_user_command
 from app.domain.admin.entities import RefreshTokenExternal, hash_token
 from app.domain.context import ContextProtocol
 from app.domain.entities import EntityId
@@ -104,7 +104,7 @@ async def rotate_refresh_token(
         raise InvalidRefreshToken("Invalid refresh token")
 
     if previous_token.revoked_at:
-        await revoke_all_tokens_for_user(context, user_id=previous_token.user_id)
+        await logout_user_command(context, user_id=previous_token.user_id)
         logger.error("Refresh token reuse detected")
         raise InvalidRefreshToken("Refresh token reuse detected")
 

@@ -11,5 +11,6 @@ logfire.configure(
     environment=settings.environment,
     console=False,
 )
+logfire.instrument_pymongo(capture_statement=True)
 app = create_fastapi_app(settings=settings)
 logfire.instrument_fastapi(app, capture_headers=True, extra_spans=True)

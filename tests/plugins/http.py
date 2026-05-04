@@ -28,6 +28,7 @@ def settings_override_func() -> Settings:
         mongo_password="password",
         mongo_host="localhost",
         mongo_database="test",
+        redis_host="localhost",
         gotenberg_host="http://localhost:3000",
     )
 

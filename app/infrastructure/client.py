@@ -5,9 +5,11 @@ from app.infrastructure.logger import logger
 from app.infrastructure.utils import MongoDocument
 
 
-def create_mongo_client(settings: Settings) -> AsyncMongoClient[MongoDocument]:
-    logger.info("Connecting to MongoDB...")
-    return AsyncMongoClient(
+async def create_mongo_client(settings: Settings) -> AsyncMongoClient[MongoDocument]:
+    client: AsyncMongoClient[MongoDocument] = AsyncMongoClient(
         host=settings.mongo_uri,
         uuidRepresentation="standard",
     )
+    await client.admin.command("ping")
+    logger.info("MongoDB client up")
+    return client

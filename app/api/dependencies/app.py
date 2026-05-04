@@ -32,14 +32,30 @@ async def get_session(request: Request) -> AsyncIterator[AsyncClientSession]:
             yield session
 
 
-def get_context(
-    request: Request,
-    settings: Annotated[Settings, Depends(get_settings)],
-    session: Annotated[AsyncClientSession, Depends(get_session)],
-) -> Context:
-    client: AsyncMongoClient[MongoDocument] = request.app.state.mongo_client
-    return Context(
-        settings=settings,
-        database=client[settings.mongo_database],
-        session=session,
-    )
+class ContextFactory:
+    @staticmethod
+    def query(
+        request: Request,
+        settings: Annotated[Settings, Depends(get_settings)],
+    ) -> Context:
+        client: AsyncMongoClient[MongoDocument] = request.app.state.mongo_client
+        return Context(
+            settings=settings,
+            redis_client=request.app.state.redis_client,
+            mongo_database=client[settings.mongo_database],
+            mongo_session=None,
+        )
+
+    @staticmethod
+    def command(
+        request: Request,
+        settings: Annotated[Settings, Depends(get_settings)],
+        session: Annotated[AsyncClientSession, Depends(get_session)],
+    ) -> Context:
+        client: AsyncMongoClient[MongoDocument] = request.app.state.mongo_client
+        return Context(
+            settings=settings,
+            redis_client=request.app.state.redis_client,
+            mongo_database=client[settings.mongo_database],
+            mongo_session=session,
+        )

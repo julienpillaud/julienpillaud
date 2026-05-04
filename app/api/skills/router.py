@@ -2,7 +2,7 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, status
 
-from app.api.dependencies.app import get_context
+from app.api.dependencies.app import ContextFactory
 from app.api.dependencies.user import get_current_user
 from app.core.context import Context
 from app.domain.entities import EntityId
@@ -34,7 +34,7 @@ router = APIRouter(prefix="/skills")
     dependencies=[Depends(get_current_user)],
 )
 async def get_skill_categories(
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.query)],
 ) -> Any:
     return await get_skill_categories_command(context)
 
@@ -46,7 +46,7 @@ async def get_skill_categories(
     dependencies=[Depends(get_current_user)],
 )
 async def create_skill(
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.command)],
     data: SkillCreate,
 ) -> Any:
     return await create_skill_command(context, data=data)
@@ -58,7 +58,7 @@ async def create_skill(
     dependencies=[Depends(get_current_user)],
 )
 async def delete_skill(
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.command)],
     skill_id: EntityId,
 ) -> None:
     await delete_skill_command(context, skill_id=skill_id)
@@ -70,7 +70,7 @@ async def delete_skill(
     dependencies=[Depends(get_current_user)],
 )
 async def reorder_skills(
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.command)],
     data: list[EntityReorder],
 ) -> None:
     await reorder_skills_command(context, data=data)
@@ -82,7 +82,7 @@ async def reorder_skills(
     dependencies=[Depends(get_current_user)],
 )
 async def reorder_skill_categories(
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.command)],
     data: list[EntityReorder],
 ) -> None:
     await reorder_skill_categories_command(context, data=data)
@@ -94,7 +94,7 @@ async def reorder_skill_categories(
     dependencies=[Depends(get_current_user)],
 )
 async def update_skill_category(
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.command)],
     category_id: EntityId,
     data: SkillCategoryUpdate,
 ) -> Any:
@@ -111,7 +111,7 @@ async def update_skill_category(
     dependencies=[Depends(get_current_user)],
 )
 async def delete_skill_category(
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.command)],
     category_id: EntityId,
 ) -> None:
     await delete_skill_category_command(context, category_id=category_id)

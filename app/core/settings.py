@@ -1,7 +1,7 @@
 from enum import StrEnum
 from pathlib import Path
 
-from pydantic import BaseModel, ConfigDict, computed_field
+from pydantic import BaseModel, ConfigDict, RedisDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 APP_PATH = Path(__file__).resolve().parents[1]
@@ -38,6 +38,9 @@ class Settings(BaseSettings):
     mongo_host: str
     mongo_database: str
 
+    redis_host: str
+    redis_port: int = 6379
+
     gotenberg_host: str
 
     @computed_field
@@ -51,4 +54,14 @@ class Settings(BaseSettings):
             user=self.mongo_user,
             password=self.mongo_password,
             host=self.mongo_host,
+        )
+
+    @computed_field
+    @property
+    def redis_dsn(self) -> RedisDsn:
+        return RedisDsn.build(
+            scheme="redis",
+            host=self.redis_host,
+            port=self.redis_port,
+            path="0",
         )
