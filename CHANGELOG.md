@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.0](https://github.com/julienpillaud/julienpillaud/compare/0.18.0...0.19.0) (2026-05-05)
+
+
+### Features
+
+* add cache manager ([#47](https://github.com/julienpillaud/julienpillaud/issues/47)) ([ec2b91b](https://github.com/julienpillaud/julienpillaud/commit/ec2b91b2f8abf59a51ebecc580454b13e5b0ace8))
+
 ## [0.18.0](https://github.com/julienpillaud/julienpillaud/compare/0.17.0...0.18.0) (2026-05-01)
 
 
