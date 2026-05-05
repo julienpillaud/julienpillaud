@@ -5,7 +5,7 @@ from app.domain.exceptions import ForbiddenError, NotFoundError
 from app.domain.security import verify_password
 
 
-async def authenticate_user(
+async def authenticate_user_command(
     context: ContextProtocol,
     /,
     username: str,
@@ -21,17 +21,33 @@ async def authenticate_user(
     return UserExternal(id=user.id, username=user.username)
 
 
-async def get_user(context: ContextProtocol, /, user_id: EntityId) -> UserExternal:
+async def get_user_command(
+    context: ContextProtocol,
+    /,
+    user_id: EntityId,
+) -> UserExternal:
+    cached = await context.cache_manager.get(key=str(user_id))
+    if cached:
+        return UserExternal.model_validate_json(cached)
+
     user = await context.repository.get_user(user_id=user_id)
     if not user:
         raise NotFoundError(f"User {user_id} not found")
 
-    return UserExternal(id=user.id, username=user.username)
+    user_external = UserExternal(id=user.id, username=user.username)
+
+    await context.cache_manager.set(
+        key=str(user_id),
+        value=user_external.model_dump_json(),
+    )
+
+    return user_external
 
 
-async def revoke_all_tokens_for_user(
+async def logout_user_command(
     context: ContextProtocol,
     /,
     user_id: EntityId,
 ) -> None:
     await context.repository.revoke_all_tokens_for_user(user_id=user_id)
+    await context.cache_manager.delete(key=str(user_id))

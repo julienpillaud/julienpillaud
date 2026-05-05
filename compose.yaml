@@ -27,7 +27,15 @@ services:
       # Enable redirection for HTTP and HTTPS
       - traefik.http.routers.${SERVICE_NAME}-http.middlewares=https-redirect
 
+  redis:
+    container_name: redis
+    image: redis:8.4
+    restart: always
+    networks:
+      - internal
+
   gotenberg:
+    container_name: gotenberg
     image: gotenberg/gotenberg:8
     restart: always
     networks:

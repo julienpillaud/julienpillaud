@@ -1,25 +1,17 @@
 services:
-  app:
-    container_name: app
-    build: .
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    command: [ "--replSet", "rs0", "--bind_ip_all" ]
     ports:
-      - "8000:8000"
-    networks:
-      - internal
-    command: uvicorn app.core.app:app --host 0.0.0.0 --port 8000 --reload
-    develop:
-      watch:
-        - action: sync
-          path: ./app
-          target: /app
-        - action: rebuild
-          path: pyproject.toml
+      - "27017:27017"
+    volumes:
+      - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    restart: unless-stopped
 
-  gotenberg:
-    image: gotenberg/gotenberg:8
-    networks:
-      - internal
-
-networks:
-  internal:
-    driver: bridge
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped

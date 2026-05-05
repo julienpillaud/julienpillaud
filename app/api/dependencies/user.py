@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import Depends
 from fastapi.requests import Request
 
-from app.api.dependencies.app import get_context, get_settings
+from app.api.dependencies.app import ContextFactory, get_settings
 from app.api.exceptions import AuthorizationError
 from app.api.logger import logger
 from app.api.security import (
@@ -13,7 +13,7 @@ from app.api.security import (
 )
 from app.core.context import Context
 from app.core.settings import Settings
-from app.domain.admin.commands import get_user
+from app.domain.admin.commands import get_user_command
 from app.domain.admin.entities import UserExternal
 from app.domain.context import ContextProtocol
 from app.domain.exceptions import NotFoundError
@@ -22,7 +22,7 @@ from app.domain.exceptions import NotFoundError
 async def get_current_user(
     request: Request,
     settings: Annotated[Settings, Depends(get_settings)],
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.query)],
 ) -> UserExternal:
     user = await _get_user_from_tokens(
         request=request,
@@ -39,7 +39,7 @@ async def get_current_user(
 async def get_optional_current_user(
     request: Request,
     settings: Annotated[Settings, Depends(get_settings)],
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.query)],
 ) -> UserExternal | None:
     return await _get_user_from_tokens(
         request=request,
@@ -84,7 +84,7 @@ async def _get_user_from_access_token(
 ) -> UserExternal:
     access_payload = decode_access_token(settings=settings, value=access_token)
     try:
-        return await get_user(context, user_id=access_payload.sub)
+        return await get_user_command(context, user_id=access_payload.sub)
     except NotFoundError as error:
         logger.warning("User not found")
         raise AuthorizationError("User not found") from error
@@ -103,7 +103,7 @@ async def _get_user_from_refresh_token(
     )
 
     try:
-        user = await get_user(context, user_id=new_refresh_token.user_id)
+        user = await get_user_command(context, user_id=new_refresh_token.user_id)
     except NotFoundError as error:
         logger.warning("User not found")
         raise AuthorizationError("User not found") from error

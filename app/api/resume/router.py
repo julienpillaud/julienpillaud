@@ -5,7 +5,7 @@ from fastapi.requests import Request
 from fastapi.responses import HTMLResponse, StreamingResponse
 from starlette.templating import Jinja2Templates
 
-from app.api.dependencies.app import get_context, get_templates
+from app.api.dependencies.app import ContextFactory, get_templates
 from app.api.dependencies.user import get_optional_current_user
 from app.core.context import Context
 from app.domain.admin.entities import UserExternal
@@ -19,7 +19,7 @@ async def home(
     request: Request,
     current_user: Annotated[UserExternal | None, Depends(get_optional_current_user)],
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.query)],
 ) -> HTMLResponse:
     resume = await get_resume_command(context)
     return templates.TemplateResponse(
@@ -36,7 +36,7 @@ async def home(
 @router.get("/pdf/download")
 async def download_pdf(
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.query)],
 ) -> StreamingResponse:
     resume = await get_resume_command(context)
     html = templates.get_template("resume/pdf.html").render(

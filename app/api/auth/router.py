@@ -7,12 +7,12 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 
 from app.api.auth.utils import build_login_response
-from app.api.dependencies.app import get_context, get_settings, get_templates
+from app.api.dependencies.app import ContextFactory, get_settings, get_templates
 from app.api.dependencies.user import get_current_user, get_optional_current_user
 from app.api.logger import logger
 from app.core.context import Context
 from app.core.settings import Settings
-from app.domain.admin.commands import authenticate_user, revoke_all_tokens_for_user
+from app.domain.admin.commands import authenticate_user_command, logout_user_command
 from app.domain.admin.entities import UserExternal
 from app.domain.exceptions import ForbiddenError, NotFoundError
 
@@ -42,10 +42,10 @@ async def get_login(
 async def post_login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     settings: Annotated[Settings, Depends(get_settings)],
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.command)],
 ) -> Response:
     try:
-        current_user = await authenticate_user(
+        current_user = await authenticate_user_command(
             context,
             username=form_data.username,
             password=form_data.password,
@@ -67,9 +67,9 @@ async def post_login(
 @router.post("/logout")
 async def logout(
     current_user: Annotated[UserExternal, Depends(get_current_user)],
-    context: Annotated[Context, Depends(get_context)],
+    context: Annotated[Context, Depends(ContextFactory.command)],
 ) -> Response:
-    await revoke_all_tokens_for_user(context, user_id=current_user.id)
+    await logout_user_command(context, user_id=current_user.id)
 
     response = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     response.delete_cookie(key="access_token")
