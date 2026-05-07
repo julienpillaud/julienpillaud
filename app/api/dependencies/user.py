@@ -4,26 +4,22 @@ from fastapi import Depends
 from fastapi.requests import Request
 
 from app.api.dependencies.app import ContextFactory, get_settings
-from app.api.exceptions import AuthorizationError
 from app.api.logger import logger
-from app.api.security import (
-    decode_access_token,
-    generate_access_token,
-    rotate_refresh_token,
-)
+from app.api.security import decode_access_token
 from app.core.context import Context
 from app.core.settings import Settings
-from app.domain.admin.commands import get_user_command
-from app.domain.admin.entities import UserExternal
+from app.domain.auth.commands import refresh_session_command
 from app.domain.context import ContextProtocol
-from app.domain.exceptions import NotFoundError
+from app.domain.exceptions import AuthorizationError, NotFoundError
+from app.domain.users.commands import get_user_command
+from app.domain.users.entities import UserPublic
 
 
 async def get_current_user(
     request: Request,
     settings: Annotated[Settings, Depends(get_settings)],
     context: Annotated[Context, Depends(ContextFactory.query)],
-) -> UserExternal:
+) -> UserPublic:
     user = await _get_user_from_tokens(
         request=request,
         settings=settings,
@@ -40,7 +36,7 @@ async def get_optional_current_user(
     request: Request,
     settings: Annotated[Settings, Depends(get_settings)],
     context: Annotated[Context, Depends(ContextFactory.query)],
-) -> UserExternal | None:
+) -> UserPublic | None:
     return await _get_user_from_tokens(
         request=request,
         settings=settings,
@@ -52,7 +48,7 @@ async def _get_user_from_tokens(
     request: Request,
     settings: Settings,
     context: ContextProtocol,
-) -> UserExternal | None:
+) -> UserPublic | None:
     request.state.access_token = None
     request.state.refresh_token = None
 
@@ -81,12 +77,11 @@ async def _get_user_from_access_token(
     access_token: str,
     settings: Settings,
     context: ContextProtocol,
-) -> UserExternal:
+) -> UserPublic:
     access_payload = decode_access_token(settings=settings, value=access_token)
     try:
         return await get_user_command(context, user_id=access_payload.sub)
     except NotFoundError as error:
-        logger.warning("User not found")
         raise AuthorizationError("User not found") from error
 
 
@@ -95,20 +90,18 @@ async def _get_user_from_refresh_token(
     refresh_token: str,
     settings: Settings,
     context: ContextProtocol,
-) -> UserExternal:
-    new_refresh_token = await rotate_refresh_token(
+) -> UserPublic:
+    issued_tokens = await refresh_session_command(
+        context,
         settings=settings,
-        context=context,
-        refresh_token=refresh_token,
+        raw_value=refresh_token,
     )
 
     try:
-        user = await get_user_command(context, user_id=new_refresh_token.user_id)
+        user = await get_user_command(context, user_id=issued_tokens.user_id)
     except NotFoundError as error:
-        logger.warning("User not found")
         raise AuthorizationError("User not found") from error
 
-    new_acces_token = generate_access_token(settings=settings, user_id=user.id)
-    request.state.access_token = new_acces_token
-    request.state.refresh_token = new_refresh_token.value
+    request.state.access_token = issued_tokens.access_token
+    request.state.refresh_token = issued_tokens.refresh_token
     return user

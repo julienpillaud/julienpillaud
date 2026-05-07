@@ -8,8 +8,8 @@ from starlette.templating import Jinja2Templates
 from app.api.dependencies.app import ContextFactory, get_templates
 from app.api.dependencies.user import get_optional_current_user
 from app.core.context import Context
-from app.domain.admin.entities import UserExternal
 from app.domain.resume.commands import get_resume_command
+from app.domain.users.entities import UserPublic
 
 router = APIRouter()
 
@@ -17,7 +17,7 @@ router = APIRouter()
 @router.get("/", response_class=HTMLResponse)
 async def home(
     request: Request,
-    current_user: Annotated[UserExternal | None, Depends(get_optional_current_user)],
+    current_user: Annotated[UserPublic | None, Depends(get_optional_current_user)],
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
     context: Annotated[Context, Depends(ContextFactory.query)],
 ) -> HTMLResponse:

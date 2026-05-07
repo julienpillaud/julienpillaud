@@ -5,7 +5,7 @@ from pymongo.asynchronous.database import AsyncDatabase
 from pymongo.asynchronous.mongo_client import AsyncMongoClient
 
 from app.core.settings import Settings
-from app.infrastructure.utils import MongoDocument
+from app.infrastructure.mongo_repository.utils import MongoDocument
 
 
 async def copy_collection(

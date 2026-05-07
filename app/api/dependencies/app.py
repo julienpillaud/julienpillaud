@@ -10,7 +10,7 @@ from pymongo.asynchronous.client_session import AsyncClientSession
 
 from app.core.context import Context
 from app.core.settings import Settings
-from app.infrastructure.utils import MongoDocument
+from app.infrastructure.mongo_repository.utils import MongoDocument
 
 
 @lru_cache

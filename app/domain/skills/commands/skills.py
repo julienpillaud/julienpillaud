@@ -11,7 +11,7 @@ async def get_skill_categories_command(
     context: ContextProtocol,
     /,
 ) -> list[SkillCategory]:
-    return await context.repository.get_skill_categories()
+    return await context.skill_repository.get_skill_categories()
 
 
 async def create_skill_command(
@@ -26,7 +26,7 @@ async def create_skill_command(
         display_order=data.display_order,
         category_id=category.id,
     )
-    return await context.repository.create_skill(skill)
+    return await context.skill_repository.save_skill(skill)
 
 
 async def reorder_skills_command(
@@ -34,7 +34,7 @@ async def reorder_skills_command(
     /,
     data: list[EntityReorder],
 ) -> None:
-    await context.repository.reorder_skills(data)
+    await context.skill_repository.reorder_skills(data)
 
 
 async def delete_skill_command(
@@ -42,12 +42,14 @@ async def delete_skill_command(
     /,
     skill_id: EntityId,
 ) -> None:
-    skill = await context.repository.get_skill(skill_id=skill_id)
+    skill = await context.skill_repository.get_skill(skill_id=skill_id)
     if not skill:
         raise NotFoundError(f"Skill {skill_id} not found")
 
-    await context.repository.delete_skill(skill)
+    await context.skill_repository.remove_skill(skill)
 
-    skill_category = await context.repository.get_skill_category(skill.category_id)
+    skill_category = await context.skill_repository.get_skill_category(
+        skill.category_id
+    )
     if skill_category and not skill_category.skills:
-        await context.repository.delete_skill_category(skill_category)
+        await context.skill_repository.remove_skill_category(skill_category)

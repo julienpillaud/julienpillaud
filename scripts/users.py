@@ -5,9 +5,9 @@ import uuid
 from pymongo.asynchronous.mongo_client import AsyncMongoClient
 
 from app.core.settings import Settings
-from app.domain.admin.entities import User
 from app.domain.security import get_password_hash
-from app.infrastructure.utils import MongoDocument
+from app.domain.users.entities import User
+from app.infrastructure.mongo_repository.utils import MongoDocument
 
 
 async def run(settings: Settings, args: argparse.Namespace) -> None:

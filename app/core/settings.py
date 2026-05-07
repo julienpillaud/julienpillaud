@@ -30,6 +30,7 @@ class Settings(BaseSettings):
 
     jwt_secret: str
     jwt_algorithm: str = "HS256"
+    cookie_secure: bool = True
     access_token_expire: int
     refresh_token_expire: int
 

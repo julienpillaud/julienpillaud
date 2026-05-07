@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from app.api.logger import logger
 from app.core.settings import Settings
 from app.infrastructure.cache_manager import create_redis_client
-from app.infrastructure.client import create_mongo_client
+from app.infrastructure.mongo_repository.client import create_mongo_client
 
 
 def lifespan_factory(
@@ -40,15 +40,26 @@ def mount_static(app: FastAPI, settings: Settings) -> None:
 
 def set_cookie(
     response: Response,
+    /,
     key: str,
     value: str,
     max_age: int,
+    secure: bool,
 ) -> None:
     response.set_cookie(
         key=key,
         value=value,
         max_age=max_age,
-        secure=True,
+        secure=secure,
+        httponly=True,
+        samesite="lax",
+    )
+
+
+def delete_cookie(response: Response, /, key: str, secure: bool) -> None:
+    response.delete_cookie(
+        key=key,
+        secure=secure,
         httponly=True,
         samesite="lax",
     )
