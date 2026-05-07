@@ -1,8 +1,8 @@
-from app.domain.admin.entities import UserExternal
 from app.domain.context import ContextProtocol
 from app.domain.entities import EntityId
 from app.domain.exceptions import ForbiddenError, NotFoundError
 from app.domain.security import verify_password
+from app.domain.users.entities import UserPublic
 
 
 async def authenticate_user_command(
@@ -10,31 +10,31 @@ async def authenticate_user_command(
     /,
     username: str,
     password: str,
-) -> UserExternal:
-    user = await context.repository.get_user_by_username(username)
+) -> UserPublic:
+    user = await context.user_repository.get_by_username(username)
     if not user:
-        raise NotFoundError(f"User {username} not found")
+        raise NotFoundError("User not found")
 
     if not verify_password(password, user.hashed_password):
-        raise ForbiddenError("Invalid password")
+        raise ForbiddenError(f"User '{user.id}' - Invalid password")
 
-    return UserExternal(id=user.id, username=user.username)
+    return UserPublic(id=user.id, username=user.username)
 
 
 async def get_user_command(
     context: ContextProtocol,
     /,
     user_id: EntityId,
-) -> UserExternal:
+) -> UserPublic:
     cached = await context.cache_manager.get(key=str(user_id))
     if cached:
-        return UserExternal.model_validate_json(cached)
+        return UserPublic.model_validate_json(cached)
 
-    user = await context.repository.get_user(user_id=user_id)
+    user = await context.user_repository.get_by_id(user_id=user_id)
     if not user:
-        raise NotFoundError(f"User {user_id} not found")
+        raise NotFoundError(f"User '{user_id}' - Not found")
 
-    user_external = UserExternal(id=user.id, username=user.username)
+    user_external = UserPublic(id=user.id, username=user.username)
 
     await context.cache_manager.set(
         key=str(user_id),
@@ -49,5 +49,5 @@ async def logout_user_command(
     /,
     user_id: EntityId,
 ) -> None:
-    await context.repository.revoke_all_tokens_for_user(user_id=user_id)
+    await context.refresh_token_repository.revoke_for_user(user_id=user_id)
     await context.cache_manager.delete(key=str(user_id))

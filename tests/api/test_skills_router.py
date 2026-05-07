@@ -3,13 +3,13 @@ import uuid
 from fastapi import status
 from fastapi.testclient import TestClient
 
-from app.domain.admin.entities import User
+from app.domain.auth.entities import IssuedTokens
 from tests.factories.skills import SkillFactory
 
 
 def test_get_skills(
     client: TestClient,
-    logged_user: User,
+    tokens: IssuedTokens,
     skill_factory: SkillFactory,
 ) -> None:
     n_categories = 3
@@ -24,7 +24,7 @@ def test_get_skills(
 
 def test_create_skill(
     client: TestClient,
-    logged_user: User,
+    tokens: IssuedTokens,
     skill_factory: SkillFactory,
 ) -> None:
     skill_create = skill_factory.skill_create
@@ -39,7 +39,7 @@ def test_create_skill(
 
 def test_create_skill_invalid_category(
     client: TestClient,
-    logged_user: User,
+    tokens: IssuedTokens,
     skill_factory: SkillFactory,
 ) -> None:
     skill_create = skill_factory.skill_create
@@ -53,7 +53,7 @@ def test_create_skill_invalid_category(
 
 def test_delete_skill(
     client: TestClient,
-    logged_user: User,
+    tokens: IssuedTokens,
     skill_factory: SkillFactory,
 ) -> None:
     skill = skill_factory.create_one()
@@ -63,10 +63,7 @@ def test_delete_skill(
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
 
-def test_delete_skill_not_found(
-    client: TestClient,
-    logged_user: User,
-) -> None:
+def test_delete_skill_not_found(client: TestClient, tokens: IssuedTokens) -> None:
     skill_id = uuid.uuid7()
 
     response = client.delete(f"/skills/{skill_id}")

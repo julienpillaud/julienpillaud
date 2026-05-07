@@ -8,8 +8,7 @@ from app.domain.skills.entities import (
     SkillCategoryCreate,
     SkillCreate,
 )
-from app.infrastructure.repository import to_database_entity
-from app.infrastructure.utils import MongoDocument
+from app.infrastructure.mongo_repository.utils import MongoDocument, to_database_entity
 
 
 def generate_skills(n_skills: int = 1, n_categories: int = 1) -> list[SkillCategory]:

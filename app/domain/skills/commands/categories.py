@@ -17,7 +17,7 @@ async def get_or_create_skill_category_command(
     data: SkillCreate,
 ) -> SkillCategory:
     if data.category.id:
-        category = await context.repository.get_skill_category(data.category.id)
+        category = await context.skill_repository.get_skill_category(data.category.id)
         if not category:
             raise NotFoundError(f"Category {data.category.id} not found")
 
@@ -29,7 +29,7 @@ async def get_or_create_skill_category_command(
         display_order=data.category.display_order,
         skills=[],
     )
-    return await context.repository.create_skill_category(category)
+    return await context.skill_repository.save_skill_category(category)
 
 
 async def update_skill_category_command(
@@ -38,13 +38,15 @@ async def update_skill_category_command(
     category_id: EntityId,
     data: SkillCategoryUpdate,
 ) -> SkillCategory:
-    category = await context.repository.get_skill_category(category_id=category_id)
+    category = await context.skill_repository.get_skill_category(
+        category_id=category_id
+    )
     if not category:
         raise NotFoundError(f"Category {category_id} not found")
 
     category.name = data.name
 
-    return await context.repository.update_skill_category(category)
+    return await context.skill_repository.update_skill_category(category)
 
 
 async def reorder_skill_categories_command(
@@ -52,7 +54,7 @@ async def reorder_skill_categories_command(
     /,
     data: list[EntityReorder],
 ) -> None:
-    await context.repository.reorder_skill_categories(data)
+    await context.skill_repository.reorder_skill_categories(data)
 
 
 async def delete_skill_category_command(
@@ -60,8 +62,10 @@ async def delete_skill_category_command(
     /,
     category_id: EntityId,
 ) -> None:
-    category = await context.repository.get_skill_category(category_id=category_id)
+    category = await context.skill_repository.get_skill_category(
+        category_id=category_id
+    )
     if not category:
         raise NotFoundError(f"Category {category_id} not found")
 
-    await context.repository.delete_skill_category(category)
+    await context.skill_repository.remove_skill_category(category)

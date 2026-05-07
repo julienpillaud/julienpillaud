@@ -1,5 +1,12 @@
+from app.domain.logger import logger
+
+
 class DomainError(Exception):
     """Base class for domain exceptions."""
+
+    def __init__(self, message: str) -> None:
+        logger.error(message)
+        super().__init__(message)
 
 
 class BadRequestError(DomainError):
@@ -20,3 +27,15 @@ class ConflictError(DomainError):
 
 class UnprocessableContentError(DomainError):
     """Domain error for a 422 HTTP status code."""
+
+
+class AuthorizationError(Exception):
+    pass
+
+
+class InvalidAccessToken(AuthorizationError):
+    pass
+
+
+class InvalidRefreshToken(AuthorizationError):
+    pass

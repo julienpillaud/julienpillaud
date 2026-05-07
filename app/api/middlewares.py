@@ -18,17 +18,19 @@ def add_security_middleware(app: FastAPI, settings: Settings) -> None:
         access_token = getattr(request.state, "access_token", None)
         if access_token:
             set_cookie(
-                response=response,
+                response,
                 key="access_token",
                 value=access_token,
                 max_age=settings.access_token_expire,
+                secure=settings.cookie_secure,
             )
         refresh_token = getattr(request.state, "refresh_token", None)
         if refresh_token:
             set_cookie(
-                response=response,
+                response,
                 key="refresh_token",
                 value=refresh_token,
                 max_age=settings.refresh_token_expire,
+                secure=settings.cookie_secure,
             )
         return response
