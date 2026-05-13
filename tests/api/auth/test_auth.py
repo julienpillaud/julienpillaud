@@ -22,7 +22,7 @@ def test_auth_refresh_only(
     response = client.get("/admin")
 
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "admin.html"  # type: ignore[attr-defined]
+    assert response.template.name == "admin.html"  # type: ignore[attr-defined, ty:unresolved-attribute]
 
     assert "access_token" in response.cookies
     assert "refresh_token" in response.cookies
@@ -50,7 +50,7 @@ def test_auth_refresh_expired(
     response = client.get("/admin")
 
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "error.html"  # type: ignore[attr-defined]
+    assert response.template.name == "error.html"  # type: ignore[attr-defined, ty:unresolved-attribute]
 
 
 @pytest.mark.parametrize(
@@ -67,4 +67,4 @@ def test_auth_refresh_revoked(
     response = client.get("/admin")
 
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "error.html"  # type: ignore[attr-defined]
+    assert response.template.name == "error.html"  # type: ignore[attr-defined, ty:unresolved-attribute]

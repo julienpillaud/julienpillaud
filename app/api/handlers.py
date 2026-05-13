@@ -17,7 +17,7 @@ from app.domain.exceptions import (
     UnprocessableContentError,
 )
 
-ERROR_MAPPING = {
+ERROR_MAPPING: dict[type[DomainError], int] = {
     BadRequestError: status.HTTP_400_BAD_REQUEST,
     ForbiddenError: status.HTTP_403_FORBIDDEN,
     NotFoundError: status.HTTP_404_NOT_FOUND,
@@ -34,10 +34,10 @@ def add_exception_handlers(app: FastAPI, settings: Settings) -> None:
         request: Request,
         exc: DomainError,
     ) -> Response:
-        for error in type(exc).mro():
-            if error in ERROR_MAPPING:
+        for error_cls in type(exc).mro():
+            if issubclass(error_cls, DomainError) and error_cls in ERROR_MAPPING:
                 return JSONResponse(
-                    status_code=ERROR_MAPPING[error],
+                    status_code=ERROR_MAPPING[error_cls],
                     content={"detail": str(exc)},
                 )
 

@@ -38,4 +38,4 @@ def test_logout_unknown_user(client: TestClient) -> None:
     # raise AuthorizationError
     # response made by auth_exception_handler
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "error.html"  # type: ignore[attr-defined]
+    assert response.template.name == "error.html"  # type: ignore[attr-defined, ty:unresolved-attribute]

@@ -15,7 +15,7 @@ from app.infrastructure.mongo_repository.utils import MongoDocument
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    return Settings()  # ty: ignore[missing-argument]
 
 
 @lru_cache

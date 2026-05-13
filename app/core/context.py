@@ -28,7 +28,7 @@ class Context(ContextProtocol):
         redis_client: Redis,
         mongo_database: AsyncDatabase[MongoDocument],
         mongo_session: AsyncClientSession | None = None,
-    ):
+    ) -> None:
         self.settings = settings
         self.redis_client = redis_client
         self.mongo_database = mongo_database
