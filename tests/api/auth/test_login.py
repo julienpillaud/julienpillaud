@@ -14,8 +14,8 @@ def test_get_login(client: TestClient) -> None:
 
     # Then we get the login page
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "login.html"  # type: ignore[attr-defined]
-    assert response.context["error"] is None  # type: ignore[attr-defined]
+    assert response.template.name == "login.html"  # type: ignore[attr-defined, ty:unresolved-attribute]
+    assert response.context["error"] is None  # type: ignore[attr-defined, ty:unresolved-attribute]
 
 
 @pytest.mark.parametrize(
@@ -34,7 +34,7 @@ def test_get_login_authenticated(
 
     # Then we are redirected to the admin page
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "admin.html"  # type: ignore[attr-defined]
+    assert response.template.name == "admin.html"  # type: ignore[attr-defined, ty:unresolved-attribute]
 
 
 @pytest.mark.parametrize(
@@ -53,8 +53,8 @@ def test_post_login_invalid_credentials(
 
     # Then we stay in login page with error message
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "login.html"  # type: ignore[attr-defined]
-    assert response.context["error"] == "Invalid credentials"  # type: ignore[attr-defined]
+    assert response.template.name == "login.html"  # type: ignore[attr-defined, ty:unresolved-attribute]
+    assert response.context["error"] == "Invalid credentials"  # type: ignore[attr-defined, ty:unresolved-attribute]
 
 
 def test_post_login_unknown_user(client: TestClient) -> None:
@@ -64,8 +64,8 @@ def test_post_login_unknown_user(client: TestClient) -> None:
 
     # Then we stay in login page with error message
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "login.html"  # type: ignore[attr-defined]
-    assert response.context["error"] == "Invalid credentials"  # type: ignore[attr-defined]
+    assert response.template.name == "login.html"  # type: ignore[attr-defined, ty:unresolved-attribute]
+    assert response.context["error"] == "Invalid credentials"  # type: ignore[attr-defined, ty:unresolved-attribute]
 
 
 @pytest.mark.parametrize(
@@ -112,7 +112,7 @@ def test_post_login_valid_credentials(
 
     # Then we are redirected to the admin page
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "admin.html"  # type: ignore[attr-defined]
+    assert response.template.name == "admin.html"  # type: ignore[attr-defined, ty:unresolved-attribute]
 
     refresh_tokens = database["refresh_tokens"].find({"user_id": user.id}).to_list()
     assert len(refresh_tokens) == 1

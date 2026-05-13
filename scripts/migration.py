@@ -42,7 +42,7 @@ async def run(settings: Settings, args: argparse.Namespace) -> None:
 
 
 def main() -> None:
-    settings = Settings()
+    settings = Settings()  # ty: ignore[missing-argument]
 
     parser = argparse.ArgumentParser()
     parser.add_argument("src")

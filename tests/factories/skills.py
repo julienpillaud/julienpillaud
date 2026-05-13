@@ -40,7 +40,7 @@ def generate_skills(n_skills: int = 1, n_categories: int = 1) -> list[SkillCateg
 
 
 class SkillFactory:
-    def __init__(self, database: Database[MongoDocument]):
+    def __init__(self, database: Database[MongoDocument]) -> None:
         self.database = database
 
     @property

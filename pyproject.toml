@@ -5,8 +5,8 @@ dynamic = ["version"]
 requires-python = ">=3.14"
 dependencies = [
     "fastapi[standard]==0.136.1",
-    "logfire[fastapi,pymongo,redis]==4.32.1",
-    "pwdlib[argon2]>=0.3.0",
+    "logfire[fastapi,pymongo,redis]==4.33.0",
+    "pwdlib[argon2]==0.3.0",
     "pyjwt==2.12.1",
     "pymongo==4.17.0",
     "redis==7.4.0",
@@ -14,10 +14,10 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "mypy==1.20.2",
-    "pre-commit==4.6.0",
+    "mypy==2.1.0",
     "pytest==9.0.3",
     "ruff==0.15.12",
+    "ty==0.0.35",
 ]
 
 [tool.setuptools.packages.find]
@@ -36,17 +36,23 @@ select = [
     "I", # isort
     "PL", # Pylint
     "RUF",
+    "ANN", # flake8-annotations
 ]
 ignore = [
+    "ANN401", # any-type
     "SIM117", # multiple-with-statements
 ]
+
+[tool.ty.terminal]
+output-format = "concise"
 
 [tool.mypy]
 strict = true
 disable_error_code = [
     # Decorators on top of @property are not supported,
     # but pydantic use it
-    "prop-decorator"
+    "prop-decorator",
+    "unused-ignore",
 ]
 plugins = ['pydantic.mypy']
 
