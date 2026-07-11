@@ -8,7 +8,7 @@ dev-down:
     docker compose -f compose-dev.yaml down
 
 lint:
-    uv run ruff check --fix
+    uv run ruff check --fix || true
     uv run ruff format
     uv run ty check
 

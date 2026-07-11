@@ -6,16 +6,16 @@ from fastapi.responses import RedirectResponse, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 
-from app.api.dependencies.app import ContextFactory, get_settings, get_templates
+from app.api.dependencies.app import get_domain, get_settings, get_templates
 from app.api.dependencies.user import get_current_user, get_optional_current_user
 from app.api.logger import logger
 from app.api.utils import delete_cookie, set_cookie
-from app.core.context import Context
+from app.core.domain import Domain
 from app.core.settings import Settings
-from app.domain.auth.commands import create_session_command
+from app.domain.auth.use_cases import create_session
 from app.domain.exceptions import ForbiddenError, NotFoundError
-from app.domain.users.commands import authenticate_user_command, logout_user_command
 from app.domain.users.entities import UserPublic
+from app.domain.users.use_cases import authenticate_user, logout_user
 
 router = APIRouter(prefix="/auth")
 
@@ -43,11 +43,11 @@ async def get_login(
 async def post_login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     settings: Annotated[Settings, Depends(get_settings)],
-    context: Annotated[Context, Depends(ContextFactory.command)],
+    domain: Annotated[Domain, Depends(get_domain)],
 ) -> Response:
     try:
-        current_user = await authenticate_user_command(
-            context,
+        current_user = await domain.query(
+            authenticate_user,
             username=form_data.username,
             password=form_data.password,
         )
@@ -56,8 +56,8 @@ async def post_login(
         response.set_cookie(key="message", value="Invalid credentials", max_age=10)
         return response
 
-    issued_tokens = await create_session_command(
-        context,
+    issued_tokens = await domain.command(
+        create_session,
         settings=settings,
         user_id=current_user.id,
     )
@@ -85,9 +85,9 @@ async def post_login(
 async def logout(
     current_user: Annotated[UserPublic, Depends(get_current_user)],
     settings: Annotated[Settings, Depends(get_settings)],
-    context: Annotated[Context, Depends(ContextFactory.command)],
+    domain: Annotated[Domain, Depends(get_domain)],
 ) -> Response:
-    await logout_user_command(context, user_id=current_user.id)
+    await domain.command(logout_user, user_id=current_user.id)
 
     response = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     delete_cookie(response, key="access_token", secure=settings.cookie_secure)
