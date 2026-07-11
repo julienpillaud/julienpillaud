@@ -3,23 +3,23 @@ import uuid
 from app.domain.context import ContextProtocol
 from app.domain.entities import EntityId
 from app.domain.exceptions import NotFoundError
-from app.domain.skills.commands.categories import get_or_create_skill_category_command
 from app.domain.skills.entities import EntityReorder, Skill, SkillCategory, SkillCreate
+from app.domain.skills.use_cases.categories import get_or_create_skill_category
 
 
-async def get_skill_categories_command(
+async def get_skill_categories(
     context: ContextProtocol,
     /,
 ) -> list[SkillCategory]:
     return await context.skill_repository.get_skill_categories()
 
 
-async def create_skill_command(
+async def create_skill(
     context: ContextProtocol,
     /,
     data: SkillCreate,
 ) -> Skill:
-    category = await get_or_create_skill_category_command(context, data=data)
+    category = await get_or_create_skill_category(context, data=data)
     skill = Skill(
         id=uuid.uuid7(),
         name=data.name,
@@ -29,7 +29,7 @@ async def create_skill_command(
     return await context.skill_repository.save_skill(skill)
 
 
-async def reorder_skills_command(
+async def reorder_skills(
     context: ContextProtocol,
     /,
     data: list[EntityReorder],
@@ -37,7 +37,7 @@ async def reorder_skills_command(
     await context.skill_repository.reorder_skills(data)
 
 
-async def delete_skill_command(
+async def delete_skill(
     context: ContextProtocol,
     /,
     skill_id: EntityId,

@@ -10,10 +10,10 @@ from app.domain.auth.entities import IssuedTokens, RefreshToken
 from app.domain.context import ContextProtocol
 from app.domain.entities import EntityId
 from app.domain.exceptions import InvalidRefreshToken
-from app.domain.users.commands import logout_user_command
+from app.domain.users.use_cases import logout_user
 
 
-async def create_session_command(
+async def create_session(
     context: ContextProtocol,
     /,
     settings: Settings,
@@ -40,7 +40,7 @@ async def create_session_command(
     )
 
 
-async def refresh_session_command(
+async def refresh_session(
     context: ContextProtocol,
     /,
     settings: Settings,
@@ -53,7 +53,7 @@ async def refresh_session_command(
         raise InvalidRefreshToken("Invalid refresh token")
 
     if previous_token.revoked_at:
-        await logout_user_command(context, user_id=previous_token.user_id)
+        await logout_user(context, user_id=previous_token.user_id)
         raise InvalidRefreshToken("Refresh token reuse detected")
 
     if not previous_token.is_valid:
@@ -61,7 +61,7 @@ async def refresh_session_command(
 
     await context.refresh_token_repository.revoke(token_id=previous_token.id)
 
-    return await create_session_command(
+    return await create_session(
         context,
         settings=settings,
         user_id=previous_token.user_id,

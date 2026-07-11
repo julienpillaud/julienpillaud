@@ -5,17 +5,19 @@ from typing import Annotated
 from fastapi import Depends
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
-from pymongo import AsyncMongoClient
 from pymongo.asynchronous.client_session import AsyncClientSession
 
-from app.core.context import Context
+from app.core.context import Context, ContextFactory
+from app.core.domain import Domain
 from app.core.settings import Settings
-from app.infrastructure.mongo_repository.utils import MongoDocument
+from app.domain.pdf_converter import PDFConverterProtocol
+from app.infrastructure.mongo_repository.resource.asynchronous import AsyncMongoResource
+from app.infrastructure.pdf_converter import GotenbergPDFConverter
 
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()  # ty: ignore[missing-argument]
+    return Settings()
 
 
 @lru_cache
@@ -25,37 +27,48 @@ def get_templates(
     return Jinja2Templates(directory=settings.paths.templates)
 
 
-async def get_session(request: Request) -> AsyncIterator[AsyncClientSession]:
-    client: AsyncMongoClient[MongoDocument] = request.app.state.mongo_client
-    async with client.start_session() as session:
-        async with await session.start_transaction():
-            yield session
+def get_pdf_converter(
+    request: Request,
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> PDFConverterProtocol:
+    http_client = request.app.state.http_client
+    return GotenbergPDFConverter(
+        client=http_client,
+        host=settings.gotenberg_host,
+    )
 
 
-class ContextFactory:
-    @staticmethod
-    def query(
-        request: Request,
-        settings: Annotated[Settings, Depends(get_settings)],
-    ) -> Context:
-        client: AsyncMongoClient[MongoDocument] = request.app.state.mongo_client
+def get_mongo_resource(request: Request) -> AsyncMongoResource:
+    resource = request.app.state.mongo_resource
+    if not isinstance(resource, AsyncMongoResource):
+        raise RuntimeError()
+
+    return resource
+
+
+def get_context_factory(
+    request: Request,
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> ContextFactory:
+    mongo_client = request.app.state.mongo_resource.client
+
+    def _get_context(session: AsyncClientSession | None) -> Context:
         return Context(
             settings=settings,
             redis_client=request.app.state.redis_client,
-            mongo_database=client[settings.mongo_database],
-            mongo_session=None,
+            database=mongo_client[settings.mongo_database],
+            session=session,
         )
 
-    @staticmethod
-    def command(
-        request: Request,
-        settings: Annotated[Settings, Depends(get_settings)],
-        session: Annotated[AsyncClientSession, Depends(get_session)],
-    ) -> Context:
-        client: AsyncMongoClient[MongoDocument] = request.app.state.mongo_client
-        return Context(
-            settings=settings,
-            redis_client=request.app.state.redis_client,
-            mongo_database=client[settings.mongo_database],
-            mongo_session=session,
-        )
+    return _get_context
+
+
+async def get_domain(
+    mongo_resource: Annotated[AsyncMongoResource, Depends(get_mongo_resource)],
+    context_factory: Annotated[ContextFactory, Depends(get_context_factory)],
+) -> AsyncIterator[Domain]:
+    async with Domain(
+        resource=mongo_resource,
+        context_factory=context_factory,
+    ) as domain:
+        yield domain

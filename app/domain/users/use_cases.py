@@ -5,7 +5,7 @@ from app.domain.security import verify_password
 from app.domain.users.entities import UserPublic
 
 
-async def authenticate_user_command(
+async def authenticate_user(
     context: ContextProtocol,
     /,
     username: str,
@@ -21,7 +21,7 @@ async def authenticate_user_command(
     return UserPublic(id=user.id, username=user.username)
 
 
-async def get_user_command(
+async def get_user(
     context: ContextProtocol,
     /,
     user_id: EntityId,
@@ -44,7 +44,7 @@ async def get_user_command(
     return user_external
 
 
-async def logout_user_command(
+async def logout_user(
     context: ContextProtocol,
     /,
     user_id: EntityId,

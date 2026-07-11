@@ -13,8 +13,8 @@ from pytest import FixtureRequest
 from app.api.app import create_fastapi_app
 from app.api.dependencies.app import get_settings
 from app.core.settings import AppEnvironment, Settings
-from app.domain.auth.commands import generate_access_token, generate_refresh_token
 from app.domain.auth.entities import IssuedTokens
+from app.domain.auth.use_cases import generate_access_token, generate_refresh_token
 from app.domain.security import get_password_hash
 from app.domain.users.entities import User
 from app.infrastructure.mongo_repository.utils import MongoDocument, to_database_entity

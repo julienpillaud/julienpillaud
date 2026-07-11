@@ -3,10 +3,11 @@ from fastapi import FastAPI
 from app.api.admin.router import router as admin_router
 from app.api.auth.router import router as auth_router
 from app.api.handlers import add_exception_handlers
+from app.api.lifespan import lifespan_factory
 from app.api.middlewares import add_security_middleware
 from app.api.resume.router import router as main_router
 from app.api.skills.router import router as skills_router
-from app.api.utils import lifespan_factory, mount_static
+from app.api.utils import mount_static
 from app.core.settings import Settings
 
 

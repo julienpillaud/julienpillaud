@@ -1,12 +1,14 @@
 from collections.abc import AsyncIterator
 
 import httpx
+from httpx2 import AsyncClient
 
 from app.domain.pdf_converter import PDFConverterProtocol
 
 
 class GotenbergPDFConverter(PDFConverterProtocol):
-    def __init__(self, host: str) -> None:
+    def __init__(self, client: AsyncClient, host: str) -> None:
+        self.client = client
         self.host = host
         self.converter_url = f"{host}/forms/chromium/convert/html"
         self.options = {

@@ -11,7 +11,7 @@ from app.domain.skills.entities import (
 )
 
 
-async def get_or_create_skill_category_command(
+async def get_or_create_skill_category(
     context: ContextProtocol,
     /,
     data: SkillCreate,
@@ -32,7 +32,7 @@ async def get_or_create_skill_category_command(
     return await context.skill_repository.save_skill_category(category)
 
 
-async def update_skill_category_command(
+async def update_skill_category(
     context: ContextProtocol,
     /,
     category_id: EntityId,
@@ -49,7 +49,7 @@ async def update_skill_category_command(
     return await context.skill_repository.update_skill_category(category)
 
 
-async def reorder_skill_categories_command(
+async def reorder_skill_categories(
     context: ContextProtocol,
     /,
     data: list[EntityReorder],
@@ -57,7 +57,7 @@ async def reorder_skill_categories_command(
     await context.skill_repository.reorder_skill_categories(data)
 
 
-async def delete_skill_category_command(
+async def delete_skill_category(
     context: ContextProtocol,
     /,
     category_id: EntityId,

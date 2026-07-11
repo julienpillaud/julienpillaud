@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     environment: AppEnvironment
     logfire_token: str = ""
     paths: AppPaths = AppPaths()
+    http_client_timeout: int = 10
 
     jwt_secret: str
     jwt_algorithm: str = "HS256"
