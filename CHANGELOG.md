@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://github.com/julienpillaud/julienpillaud/compare/0.19.0...0.20.0) (2026-07-11)
+
+
+### Features
+
+* update archi ([#51](https://github.com/julienpillaud/julienpillaud/issues/51)) ([8c8a940](https://github.com/julienpillaud/julienpillaud/commit/8c8a9402bc42df99575b8cf9482353739cdfb03c))
+
 ## [0.19.0](https://github.com/julienpillaud/julienpillaud/compare/0.18.0...0.19.0) (2026-05-07)
 
 
