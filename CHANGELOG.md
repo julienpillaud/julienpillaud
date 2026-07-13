@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.0](https://github.com/julienpillaud/julienpillaud/compare/0.20.0...0.21.0) (2026-07-13)
+
+
+### Features
+
+* update domain ([#53](https://github.com/julienpillaud/julienpillaud/issues/53)) ([b914955](https://github.com/julienpillaud/julienpillaud/commit/b914955f0dd2ed01491f841b0e9d113e53a188c1))
+
 ## [0.20.0](https://github.com/julienpillaud/julienpillaud/compare/0.19.0...0.20.0) (2026-07-11)
 
 
