@@ -13,6 +13,7 @@ class MongoResource(BaseModel):
 
     client: MongoClient[MongoDocument]
     database: Database[MongoDocument]
+    supports_transaction: bool
 
     @classmethod
     def from_settings(cls, settings: Settings, /) -> MongoResource:
@@ -25,9 +26,13 @@ class MongoResource(BaseModel):
         return cls(
             client=client,
             database=client[settings.mongo_database],
+            supports_transaction=settings.supports_transactions,
         )
 
-    def start_transaction(self) -> ClientSession:
+    def start_transaction(self) -> ClientSession | None:
+        if not self.supports_transaction:
+            return None
+
         session = self.client.start_session()
         session.start_transaction()
         return session
@@ -42,12 +47,15 @@ class MongoResource(BaseModel):
             return
 
         if session.in_transaction:
-            if exc_val is None and is_mutation:
+            if exc_val:
+                session.abort_transaction()
+                logger.info(
+                    f"Transaction rollback: {type(exc_val).__name__}({exc_val})"
+                )
+            elif is_mutation:
                 session.commit_transaction()
                 logger.info("Transaction committed")
-            else:
-                session.abort_transaction()
-                logger.info("Transaction aborted")
+
         session.end_session()
 
     def release(self) -> None:

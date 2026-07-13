@@ -39,6 +39,7 @@ class Settings(BaseSettings):
     mongo_password: str
     mongo_host: str
     mongo_database: str
+    supports_transactions: bool = True
 
     redis_host: str
     redis_port: int = 6379
