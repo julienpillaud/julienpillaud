@@ -1,6 +1,3 @@
-from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager
-
 from pydantic import BaseModel, ConfigDict
 from pymongo import AsyncMongoClient
 from pymongo.asynchronous.client_session import AsyncClientSession
@@ -16,6 +13,7 @@ class AsyncMongoResource(BaseModel):
 
     client: AsyncMongoClient[MongoDocument]
     database: AsyncDatabase[MongoDocument]
+    supports_transaction: bool
 
     @classmethod
     async def from_settings(cls, settings: Settings, /) -> AsyncMongoResource:
@@ -28,9 +26,13 @@ class AsyncMongoResource(BaseModel):
         return cls(
             client=client,
             database=client[settings.mongo_database],
+            supports_transaction=settings.supports_transactions,
         )
 
-    async def start_transaction(self) -> AsyncClientSession:
+    async def start_transaction(self) -> AsyncClientSession | None:
+        if not self.supports_transaction:
+            return None
+
         session = self.client.start_session()
         await session.start_transaction()
         return session
@@ -41,23 +43,20 @@ class AsyncMongoResource(BaseModel):
         exc_val: BaseException | None,
         is_mutation: bool,
     ) -> None:
-        if session is None:
+        if not session:
             return
 
         if session.in_transaction:
-            if exc_val is None and is_mutation:
+            if exc_val:
+                await session.abort_transaction()
+                logger.info(
+                    f"Transaction rollback: {type(exc_val).__name__}({exc_val})"
+                )
+            elif is_mutation:
                 await session.commit_transaction()
                 logger.info("Transaction committed")
-            else:
-                await session.abort_transaction()
-                logger.info("Transaction aborted")
-        await session.end_session()
 
-    @asynccontextmanager
-    async def session(self) -> AsyncIterator[AsyncClientSession]:
-        async with self.client.start_session() as session:
-            async with await session.start_transaction():
-                yield session
+        await session.end_session()
 
     async def release(self) -> None:
         logger.info("MongoDB client released")
