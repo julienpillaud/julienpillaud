@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.0](https://github.com/julienpillaud/julienpillaud/compare/0.21.0...0.22.0) (2026-07-16)
+
+
+### Features
+
+* simplify domain ([#55](https://github.com/julienpillaud/julienpillaud/issues/55)) ([d3d6ed5](https://github.com/julienpillaud/julienpillaud/commit/d3d6ed5b4c92a6fab9bb0f1d3e046390d7397e57))
+
 ## [0.21.0](https://github.com/julienpillaud/julienpillaud/compare/0.20.0...0.21.0) (2026-07-13)
 
 
