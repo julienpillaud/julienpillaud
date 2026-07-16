@@ -35,7 +35,7 @@ async def admin_pdf(
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
     domain: Annotated[Domain, Depends(get_domain)],
 ) -> Response:
-    resume = await domain.query(get_resume)
+    resume = await domain.run(get_resume)
     return templates.TemplateResponse(
         request=request,
         name="resume/pdf.html",

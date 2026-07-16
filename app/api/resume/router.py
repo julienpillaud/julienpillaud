@@ -5,7 +5,11 @@ from fastapi.requests import Request
 from fastapi.responses import HTMLResponse, StreamingResponse
 from starlette.templating import Jinja2Templates
 
-from app.api.dependencies.app import get_domain, get_pdf_converter, get_templates
+from app.api.dependencies.app import (
+    get_domain,
+    get_pdf_converter,
+    get_templates,
+)
 from app.api.dependencies.user import get_optional_current_user
 from app.core.domain import Domain
 from app.domain.pdf_converter import PDFConverterProtocol
@@ -22,7 +26,7 @@ async def home(
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
     domain: Annotated[Domain, Depends(get_domain)],
 ) -> HTMLResponse:
-    resume = await domain.query(get_resume)
+    resume = await domain.run(get_resume)
     return templates.TemplateResponse(
         request=request,
         name="resume/base.html",
@@ -40,7 +44,7 @@ async def download_pdf(
     domain: Annotated[Domain, Depends(get_domain)],
     pdf_converter: Annotated[PDFConverterProtocol, Depends(get_pdf_converter)],
 ) -> StreamingResponse:
-    resume = await domain.query(get_resume)
+    resume = await domain.run(get_resume)
     html_content = templates.get_template("resume/pdf.html").render(
         {"format": "pdf", "resume": resume}
     )

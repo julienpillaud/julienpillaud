@@ -3,20 +3,20 @@ from pymongo import AsyncMongoClient
 from pymongo.asynchronous.client_session import AsyncClientSession
 from pymongo.asynchronous.database import AsyncDatabase
 
+from app.core.domain import TransactionProtocol
 from app.core.settings import Settings
 from app.infrastructure.logger import logger
 from app.infrastructure.mongo_repository.utils import MongoDocument
 
 
-class AsyncMongoResource(BaseModel):
+class MongoResource(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     client: AsyncMongoClient[MongoDocument]
     database: AsyncDatabase[MongoDocument]
-    supports_transaction: bool
 
     @classmethod
-    async def from_settings(cls, settings: Settings, /) -> AsyncMongoResource:
+    async def from_settings(cls, settings: Settings, /) -> MongoResource:
         client: AsyncMongoClient[MongoDocument] = AsyncMongoClient(
             host=str(settings.mongo_uri),
             uuidRepresentation="standard",
@@ -26,38 +26,33 @@ class AsyncMongoResource(BaseModel):
         return cls(
             client=client,
             database=client[settings.mongo_database],
-            supports_transaction=settings.supports_transactions,
         )
-
-    async def start_transaction(self) -> AsyncClientSession | None:
-        if not self.supports_transaction:
-            return None
-
-        session = self.client.start_session()
-        await session.start_transaction()
-        return session
-
-    @staticmethod
-    async def end_transaction(
-        session: AsyncClientSession | None,
-        exc_val: BaseException | None,
-        is_mutation: bool,
-    ) -> None:
-        if not session:
-            return
-
-        if session.in_transaction:
-            if exc_val:
-                await session.abort_transaction()
-                logger.info(
-                    f"Transaction rollback: {type(exc_val).__name__}({exc_val})"
-                )
-            elif is_mutation:
-                await session.commit_transaction()
-                logger.info("Transaction committed")
-
-        await session.end_session()
 
     async def release(self) -> None:
         logger.info("MongoDB client released")
         await self.client.close()
+
+
+class MongoTransaction(TransactionProtocol):
+    def __init__(self, resource: MongoResource, /) -> None:
+        self.resource = resource
+        self.session: AsyncClientSession | None = None
+
+    async def start(self) -> None:
+        self.session = self.resource.client.start_session()
+        await self.session.start_transaction()
+
+    async def end(self, error: BaseException | None) -> None:
+        if not self.session:
+            return
+
+        if self.session.in_transaction:
+            if error:
+                await self.session.abort_transaction()
+                logger.error(f"Transaction rollback: {type(error).__name__}({error})")
+            else:
+                await self.session.commit_transaction()
+                logger.info("Transaction committed")
+
+        await self.session.end_session()
+        self.session = None
