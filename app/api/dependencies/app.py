@@ -1,17 +1,17 @@
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Callable
 from functools import lru_cache
 from typing import Annotated
 
 from fastapi import Depends
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
-from pymongo.asynchronous.client_session import AsyncClientSession
 
-from app.core.context import Context, ContextFactory
-from app.core.domain import Domain
+from app.core.context import ContextProvider
+from app.core.domain import Domain, DomainContext, TransactionProtocol
 from app.core.settings import Settings
+from app.domain.context import ContextProtocol
 from app.domain.pdf_converter import PDFConverterProtocol
-from app.infrastructure.mongo_repository.resource.asynchronous import AsyncMongoResource
+from app.infrastructure.mongo_repository.resource.asynchronous import MongoTransaction
 from app.infrastructure.pdf_converter import GotenbergPDFConverter
 
 
@@ -38,37 +38,30 @@ def get_pdf_converter(
     )
 
 
-def get_mongo_resource(request: Request) -> AsyncMongoResource:
-    resource = request.app.state.mongo_resource
-    if not isinstance(resource, AsyncMongoResource):
-        raise RuntimeError()
-
-    return resource
+def get_mongo_transaction(request: Request) -> MongoTransaction:
+    mongo_resource = request.app.state.mongo_resource
+    return MongoTransaction(mongo_resource)
 
 
-def get_context_factory(
+def get_context_provider(
     request: Request,
     settings: Annotated[Settings, Depends(get_settings)],
-) -> ContextFactory:
-    mongo_client = request.app.state.mongo_resource.client
-
-    def _get_context(session: AsyncClientSession | None) -> Context:
-        return Context(
-            settings=settings,
-            redis_client=request.app.state.redis_client,
-            database=mongo_client[settings.mongo_database],
-            session=session,
-        )
-
-    return _get_context
+) -> Callable[[TransactionProtocol], ContextProtocol]:
+    return ContextProvider(
+        settings=settings,
+        redis_client=request.app.state.redis_client,
+    )
 
 
 async def get_domain(
-    mongo_resource: Annotated[AsyncMongoResource, Depends(get_mongo_resource)],
-    context_factory: Annotated[ContextFactory, Depends(get_context_factory)],
+    mongo_transaction: Annotated[MongoTransaction, Depends(get_mongo_transaction)],
+    context_provider: Annotated[
+        Callable[[TransactionProtocol], ContextProtocol],
+        Depends(get_context_provider),
+    ],
 ) -> AsyncIterator[Domain]:
-    async with Domain(
-        resource=mongo_resource,
-        context_factory=context_factory,
+    async with DomainContext(
+        transaction=mongo_transaction,
+        context_provider=context_provider,
     ) as domain:
         yield domain

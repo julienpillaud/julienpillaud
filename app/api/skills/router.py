@@ -25,87 +25,64 @@ from app.domain.skills.use_cases.skills import (
     reorder_skills,
 )
 
-router = APIRouter(prefix="/skills")
+router = APIRouter(prefix="/skills", dependencies=[Depends(get_current_user)])
 
 
-@router.get("", dependencies=[Depends(get_current_user)])
+@router.get("")
 async def get_skill_categories_endpoint(
     domain: Annotated[Domain, Depends(get_domain)],
 ) -> list[SkillCategory]:
-    return await domain.query(get_skill_categories)
+    return await domain.run(get_skill_categories)
 
 
-@router.post(
-    "",
-    status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(get_current_user)],
-)
+@router.post("", status_code=status.HTTP_201_CREATED)
 async def create_skill_endpoint(
     domain: Annotated[Domain, Depends(get_domain)],
     data: SkillCreate,
 ) -> Skill:
-    return await domain.command(create_skill, data=data)
+    return await domain.run(create_skill, data=data)
 
 
-@router.delete(
-    "/{skill_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
-    dependencies=[Depends(get_current_user)],
-)
+@router.delete("/{skill_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_skill_endpoint(
     domain: Annotated[Domain, Depends(get_domain)],
     skill_id: EntityId,
 ) -> None:
-    await domain.command(delete_skill, skill_id=skill_id)
+    await domain.run(delete_skill, skill_id=skill_id)
 
 
-@router.patch(
-    "/reorder",
-    status_code=status.HTTP_204_NO_CONTENT,
-    dependencies=[Depends(get_current_user)],
-)
+@router.patch("/reorder", status_code=status.HTTP_204_NO_CONTENT)
 async def reorder_skills_endpoint(
     domain: Annotated[Domain, Depends(get_domain)],
     data: list[EntityReorder],
 ) -> None:
-    await domain.command(reorder_skills, data=data)
+    await domain.run(reorder_skills, data=data)
 
 
-@router.patch(
-    "/categories/reorder",
-    status_code=status.HTTP_204_NO_CONTENT,
-    dependencies=[Depends(get_current_user)],
-)
+@router.patch("/categories/reorder", status_code=status.HTTP_204_NO_CONTENT)
 async def reorder_skill_categories_endpoint(
     domain: Annotated[Domain, Depends(get_domain)],
     data: list[EntityReorder],
 ) -> None:
-    await domain.command(reorder_skill_categories, data=data)
+    await domain.run(reorder_skill_categories, data=data)
 
 
-@router.patch(
-    "/categories/{category_id}",
-    dependencies=[Depends(get_current_user)],
-)
+@router.patch("/categories/{category_id}")
 async def update_skill_category_endpoint(
     domain: Annotated[Domain, Depends(get_domain)],
     category_id: EntityId,
     data: SkillCategoryUpdate,
 ) -> SkillCategory:
-    return await domain.command(
+    return await domain.run(
         update_skill_category,
         category_id=category_id,
         data=data,
     )
 
 
-@router.delete(
-    "/categories/{category_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
-    dependencies=[Depends(get_current_user)],
-)
+@router.delete("/categories/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_skill_category_endpoint(
     domain: Annotated[Domain, Depends(get_domain)],
     category_id: EntityId,
 ) -> None:
-    await domain.command(delete_skill_category, category_id=category_id)
+    await domain.run(delete_skill_category, category_id=category_id)

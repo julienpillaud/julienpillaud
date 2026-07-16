@@ -8,9 +8,9 @@ from fastapi.templating import Jinja2Templates
 
 from app.api.dependencies.app import get_domain, get_settings, get_templates
 from app.api.dependencies.user import get_current_user, get_optional_current_user
-from app.api.logger import logger
 from app.api.utils import delete_cookie, set_cookie
 from app.core.domain import Domain
+from app.core.logger import logger
 from app.core.settings import Settings
 from app.domain.auth.use_cases import create_session
 from app.domain.exceptions import ForbiddenError, NotFoundError
@@ -46,7 +46,7 @@ async def post_login(
     domain: Annotated[Domain, Depends(get_domain)],
 ) -> Response:
     try:
-        current_user = await domain.query(
+        current_user = await domain.run(
             authenticate_user,
             username=form_data.username,
             password=form_data.password,
@@ -56,7 +56,7 @@ async def post_login(
         response.set_cookie(key="message", value="Invalid credentials", max_age=10)
         return response
 
-    issued_tokens = await domain.command(
+    issued_tokens = await domain.run(
         create_session,
         settings=settings,
         user_id=current_user.id,
@@ -87,7 +87,7 @@ async def logout(
     settings: Annotated[Settings, Depends(get_settings)],
     domain: Annotated[Domain, Depends(get_domain)],
 ) -> Response:
-    await domain.command(logout_user, user_id=current_user.id)
+    await domain.run(logout_user, user_id=current_user.id)
 
     response = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     delete_cookie(response, key="access_token", secure=settings.cookie_secure)

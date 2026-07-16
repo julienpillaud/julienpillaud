@@ -5,7 +5,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import JSONResponse, PlainTextResponse
 
 from app.api.dependencies.app import get_templates
-from app.api.logger import logger
+from app.core.logger import logger
 from app.core.settings import Settings
 from app.domain.exceptions import (
     AuthorizationError,

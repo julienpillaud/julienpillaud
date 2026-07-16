@@ -5,7 +5,7 @@ dynamic = ["version"]
 requires-python = ">=3.14"
 dependencies = [
     "fastapi[standard]==0.139.0",
-    "httpx2==2.5.0",
+    "httpx2==2.7.0",
     "logfire[fastapi,pymongo,redis]==4.37.0",
     "pwdlib[argon2]==0.3.0",
     "pyjwt==2.13.0",
@@ -15,7 +15,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "mypy==2.2.0",
+    "mypy==2.3.0",
     "pytest==9.1.1",
     "ruff==0.15.21",
     "ty==0.0.59",

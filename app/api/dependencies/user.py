@@ -4,9 +4,9 @@ from fastapi import Depends
 from fastapi.requests import Request
 
 from app.api.dependencies.app import get_domain, get_settings
-from app.api.logger import logger
 from app.api.security import decode_access_token
 from app.core.domain import Domain
+from app.core.logger import logger
 from app.core.settings import Settings
 from app.domain.auth.use_cases import refresh_session
 from app.domain.exceptions import AuthorizationError, NotFoundError
@@ -79,7 +79,7 @@ async def _get_user_from_access_token(
 ) -> UserPublic:
     access_payload = decode_access_token(settings=settings, value=access_token)
     try:
-        return await domain.query(get_user, user_id=access_payload.sub)
+        return await domain.run(get_user, user_id=access_payload.sub)
     except NotFoundError as error:
         raise AuthorizationError("User not found") from error
 
@@ -90,14 +90,14 @@ async def _get_user_from_refresh_token(
     settings: Settings,
     domain: Domain,
 ) -> UserPublic:
-    issued_tokens = await domain.command(
+    issued_tokens = await domain.run(
         refresh_session,
         settings=settings,
         raw_value=refresh_token,
     )
 
     try:
-        user = await domain.query(get_user, user_id=issued_tokens.user_id)
+        user = await domain.run(get_user, user_id=issued_tokens.user_id)
     except NotFoundError as error:
         raise AuthorizationError("User not found") from error
 
