@@ -5,27 +5,17 @@ services:
     image: ghcr.io/julienpillaud/julienpillaud:${IMAGE_TAG}
     restart: always
     networks:
-      - traefik-public
+      - proxy
       - internal
     env_file:
       - .env
     labels:
       - traefik.enable=true
-      - traefik.docker.network=traefik-public
-      - traefik.constraint-label=traefik-public
-
+      - traefik.docker.network=proxy
       - traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=8000
-
-      - traefik.http.routers.${SERVICE_NAME}-http.rule=Host(`${HOST}`)
-      - traefik.http.routers.${SERVICE_NAME}-http.entrypoints=http
-
-      - traefik.http.routers.${SERVICE_NAME}-https.rule=Host(`${HOST}`)
-      - traefik.http.routers.${SERVICE_NAME}-https.entrypoints=https
-      - traefik.http.routers.${SERVICE_NAME}-https.tls=true
-      - traefik.http.routers.${SERVICE_NAME}-https.tls.certresolver=le
-
-      # Enable redirection for HTTP and HTTPS
-      - traefik.http.routers.${SERVICE_NAME}-http.middlewares=https-redirect
+      - traefik.http.routers.${SERVICE_NAME}.rule=Host(`${HOST}`)
+      - traefik.http.routers.${SERVICE_NAME}.entrypoints=websecure
+      - traefik.http.routers.${SERVICE_NAME}.tls=true
 
   redis:
     container_name: redis
@@ -42,7 +32,7 @@ services:
       - internal
 
 networks:
-  traefik-public:
+  proxy:
     external: true
   internal:
     driver: bridge
