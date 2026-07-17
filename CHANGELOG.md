@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.0](https://github.com/julienpillaud/julienpillaud/compare/0.22.0...0.23.0) (2026-07-17)
+
+
+### Features
+
+* update compose ([#57](https://github.com/julienpillaud/julienpillaud/issues/57)) ([7c671ce](https://github.com/julienpillaud/julienpillaud/commit/7c671ced0d84e22fb6bf9ebeb0dc318102c350ae))
+
 ## [0.22.0](https://github.com/julienpillaud/julienpillaud/compare/0.21.0...0.22.0) (2026-07-16)
 
 
