@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.0](https://github.com/julienpillaud/julienpillaud/compare/0.23.0...0.24.0) (2026-07-27)
+
+
+### Features
+
+* add system metrics ([#59](https://github.com/julienpillaud/julienpillaud/issues/59)) ([81ab697](https://github.com/julienpillaud/julienpillaud/commit/81ab697c6f2ed20a354bef3c891f37243d0a8b0b))
+
 ## [0.23.0](https://github.com/julienpillaud/julienpillaud/compare/0.22.0...0.23.0) (2026-07-17)
 
 
