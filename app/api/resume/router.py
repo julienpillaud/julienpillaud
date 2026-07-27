@@ -10,11 +10,9 @@ from app.api.dependencies.app import (
     get_pdf_converter,
     get_templates,
 )
-from app.api.dependencies.user import get_optional_current_user
 from app.core.domain import Domain
 from app.domain.pdf_converter import PDFConverterProtocol
 from app.domain.resume.use_cases import get_resume
-from app.domain.users.entities import UserPublic
 
 router = APIRouter()
 
@@ -22,7 +20,6 @@ router = APIRouter()
 @router.get("/", response_class=HTMLResponse)
 async def home(
     request: Request,
-    current_user: Annotated[UserPublic | None, Depends(get_optional_current_user)],
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
     domain: Annotated[Domain, Depends(get_domain)],
 ) -> HTMLResponse:
@@ -30,11 +27,7 @@ async def home(
     return templates.TemplateResponse(
         request=request,
         name="resume/base.html",
-        context={
-            "format": "html",
-            "resume": resume,
-            "current_user": current_user,
-        },
+        context={"format": "html", "resume": resume},
     )
 
 
