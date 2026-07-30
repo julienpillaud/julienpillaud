@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.0](https://github.com/julienpillaud/julienpillaud/compare/0.24.0...0.25.0) (2026-07-30)
+
+
+### Features
+
+* add backend directory ([#61](https://github.com/julienpillaud/julienpillaud/issues/61)) ([b9fd5df](https://github.com/julienpillaud/julienpillaud/commit/b9fd5df01fd8c505ab02d40f73c64da6c422f5c6))
+
 ## [0.24.0](https://github.com/julienpillaud/julienpillaud/compare/0.23.0...0.24.0) (2026-07-27)
 
 
