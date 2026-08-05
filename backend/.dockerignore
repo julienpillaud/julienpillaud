@@ -1,5 +1,0 @@
-*
-!app/
-!pyproject.toml
-!uv.lock
-app/**/__pycache__/

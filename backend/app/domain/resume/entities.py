@@ -1,8 +1,7 @@
 import datetime
 
-from pydantic import BaseModel, computed_field
+from pydantic import BaseModel
 
-from app.domain.data import MONTHS_MAP
 from app.domain.skills.entities import SkillCategory
 
 
@@ -35,16 +34,6 @@ class Metadata(BaseModel):
     education: list[Education]
     languages: list[Language]
 
-    @computed_field
-    @property
-    def sort_languages(self) -> list[Language]:
-        return sorted(self.languages, key=lambda x: x.display_order)
-
-    @computed_field
-    @property
-    def sort_education(self) -> list[Education]:
-        return sorted(self.education, key=lambda x: x.year, reverse=True)
-
 
 class Task(BaseModel):
     label: str
@@ -65,17 +54,6 @@ class Experience(BaseModel):
     end_date: datetime.datetime | None
     projects: list[Project]
     stack: list[str]
-
-    @computed_field
-    @property
-    def period(self) -> str:
-        start_date = f"{MONTHS_MAP[self.start_date.month]} {self.start_date.year}"
-        end_date = (
-            f"{MONTHS_MAP[self.end_date.month]} {self.end_date.year}"
-            if self.end_date
-            else "En cours"
-        )
-        return f"{start_date} - {end_date}"
 
 
 class Resume(BaseModel):

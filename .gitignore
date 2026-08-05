@@ -1,0 +1,16 @@
+.idea/
+.env
+
+# Backend
+backend/.venv/
+backend/*.egg-info/
+backend/**/__pycache__/
+backend/**/*.py[oc]
+backend/.mypy_cache/
+backend/.pytest_cache/
+backend/.ruff_cache/
+
+# Frontend
+frontend/dist/
+frontend/node_modules/
+frontend/.eslintcache
