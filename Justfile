@@ -7,23 +7,27 @@ dev:
 dev-down:
     docker compose -f compose-dev.yaml down
 
-[working-directory: 'backend']
+preprod:
+    docker compose -f compose-preprod.yaml up -d --build
+
+# Bacakend
+[working-directory('backend')]
 sync:
     uv sync
 
-[working-directory: 'backend']
-lint:
+[working-directory('backend')]
+lint-back:
     uv run ruff check --fix || true
     uv run ruff format
     uv run ty check
 
-[working-directory: 'backend']
+[working-directory('backend')]
 tests:
     uv run pytest
 
-[working-directory: 'backend']
-build:
-    docker buildx build --platform linux/amd64,linux/arm64 -t backend .
-
-migration *options="":
-    uv run python -m scripts.migration {{ options }}
+# Frontend
+[working-directory('frontend')]
+lint-front:
+    bun format
+    bun lint
+    bun type-check

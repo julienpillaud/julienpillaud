@@ -28,4 +28,6 @@ def create_fastapi_app(settings: Settings) -> FastAPI:
     app.include_router(admin_router)
     app.include_router(skills_router)
 
+    app.frontend("/", directory="dist", check_dir=False)
+
     return app
