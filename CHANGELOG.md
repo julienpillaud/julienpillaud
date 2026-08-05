@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.26.0](https://github.com/julienpillaud/julienpillaud/compare/0.25.0...0.26.0) (2026-08-05)
+
+
+### Features
+
+* switch to vue frontend ([#63](https://github.com/julienpillaud/julienpillaud/issues/63)) ([a010e16](https://github.com/julienpillaud/julienpillaud/commit/a010e16b532627689a02c87528bda03dfa5fedbf))
+
 ## [0.25.0](https://github.com/julienpillaud/julienpillaud/compare/0.24.0...0.25.0) (2026-07-30)
 
 
