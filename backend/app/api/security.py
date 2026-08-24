@@ -4,8 +4,8 @@ import uuid
 import jwt
 from pydantic import BaseModel, ValidationError
 
+from app.api.exceptions import InvalidAccessTokenError
 from app.core.settings import Settings
-from app.domain.exceptions import InvalidAccessToken
 
 
 class TokenPayload(BaseModel):
@@ -22,11 +22,11 @@ def decode_access_token(settings: Settings, value: str) -> TokenPayload:
             algorithms=[settings.jwt_algorithm],
         )
     except jwt.ExpiredSignatureError as error:
-        raise InvalidAccessToken("Token expired") from error
+        raise InvalidAccessTokenError("Token expired") from error
     except jwt.PyJWTError as error:
-        raise InvalidAccessToken("Could not decode token") from error
+        raise InvalidAccessTokenError("Could not decode token") from error
 
     try:
         return TokenPayload.model_validate(payload)
     except ValidationError as error:
-        raise InvalidAccessToken("Invalid token payload") from error
+        raise InvalidAccessTokenError("Invalid token payload") from error
