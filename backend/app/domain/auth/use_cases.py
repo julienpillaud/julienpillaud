@@ -5,11 +5,11 @@ import uuid
 
 import jwt
 
+from app.api.exceptions import InvalidRefreshTokenError
 from app.core.settings import Settings
 from app.domain.auth.entities import IssuedTokens, RefreshToken
 from app.domain.context import ContextProtocol
 from app.domain.entities import EntityId
-from app.domain.exceptions import InvalidRefreshToken
 from app.domain.users.use_cases import logout_user
 
 
@@ -50,14 +50,14 @@ async def refresh_session(
         hash_refresh_token(raw_value)
     )
     if not previous_token:
-        raise InvalidRefreshToken("Invalid refresh token")
+        raise InvalidRefreshTokenError("Invalid refresh token")
 
     if previous_token.revoked_at:
         await logout_user(context, user_id=previous_token.user_id)
-        raise InvalidRefreshToken("Refresh token reuse detected")
+        raise InvalidRefreshTokenError("Refresh token reuse detected")
 
     if not previous_token.is_valid:
-        raise InvalidRefreshToken("Refresh token expired")
+        raise InvalidRefreshTokenError("Refresh token expired")
 
     await context.refresh_token_repository.revoke(token_id=previous_token.id)
 

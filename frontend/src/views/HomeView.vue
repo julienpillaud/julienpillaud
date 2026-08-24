@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import api from '@/services/api'
 import ResumeCard from '@/components/ResumeCard.vue'
 import CardSkills from '@/components/CardSkills.vue'
 import CardMetadata from '@/components/CardMetadata.vue'
@@ -11,8 +12,8 @@ import type { Resume } from '@/types/resume'
 const resume = ref<Resume | null>(null)
 
 onMounted(async () => {
-  const response = await fetch('/api/resume')
-  resume.value = await response.json()
+  const response = await api.get('/resume')
+  resume.value = await response.data
   document.title = resume.value?.metadata.contact.full_name ?? ''
 })
 </script>

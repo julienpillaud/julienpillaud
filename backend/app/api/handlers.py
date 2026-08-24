@@ -1,24 +1,21 @@
 from fastapi import FastAPI, status
 from fastapi.requests import Request
 from fastapi.responses import Response
-from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import JSONResponse, PlainTextResponse
 
-from app.api.dependencies.app import get_templates
-from app.core.logger import logger
-from app.core.settings import Settings
 from app.domain.exceptions import (
-    AuthorizationError,
     BadRequestError,
     ConflictError,
     DomainError,
     ForbiddenError,
     NotFoundError,
+    UnauthorizedError,
     UnprocessableContentError,
 )
 
 ERROR_MAPPING: dict[type[DomainError], int] = {
     BadRequestError: status.HTTP_400_BAD_REQUEST,
+    UnauthorizedError: status.HTTP_401_UNAUTHORIZED,
     ForbiddenError: status.HTTP_403_FORBIDDEN,
     NotFoundError: status.HTTP_404_NOT_FOUND,
     ConflictError: status.HTTP_409_CONFLICT,
@@ -26,9 +23,7 @@ ERROR_MAPPING: dict[type[DomainError], int] = {
 }
 
 
-def add_exception_handlers(app: FastAPI, settings: Settings) -> None:
-    templates = get_templates(settings=settings)
-
+def add_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(DomainError)
     async def domain_exception_handler(
         request: Request,
@@ -45,23 +40,3 @@ def add_exception_handlers(app: FastAPI, settings: Settings) -> None:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content="Internal Server Error",
         )
-
-    @app.exception_handler(AuthorizationError)
-    async def auth_exception_handler(
-        request: Request,
-        exc: AuthorizationError,
-    ) -> Response:
-        exc_name = exc.__class__.__name__
-        message = f"{request.method} {request.url.path} - {exc_name}: {exc}"
-        logger.warning(message)
-        return templates.TemplateResponse(request=request, name="error.html")
-
-    @app.exception_handler(StarletteHTTPException)
-    async def http_exception_handler(
-        request: Request,
-        exc: StarletteHTTPException,
-    ) -> Response:
-        exc_name = exc.__class__.__name__
-        message = f"{request.method} {request.url.path} - {exc_name}: {exc}"
-        logger.warning(message)
-        return templates.TemplateResponse(request=request, name="error.html")

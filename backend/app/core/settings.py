@@ -24,11 +24,14 @@ class AppPaths(BaseModel):
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(extra="ignore", frozen=True, env_file=".env")
 
+    project_name: str
     environment: AppEnvironment
     logfire_token: str = ""
     paths: AppPaths = AppPaths()
     http_client_timeout: int = 10
 
+    basic_username: str
+    basic_password: str
     jwt_secret: str
     jwt_algorithm: str = "HS256"
     cookie_secure: bool = True

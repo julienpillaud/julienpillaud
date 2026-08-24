@@ -1,34 +1,30 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useTheme } from '@/composables/useTheme'
+import api from '@/services/api'
 import { Moon, Sun } from '@lucide/vue'
 
-type Theme = 'light' | 'dark'
+const route = useRoute()
+const router = useRouter()
+const { theme, toggleTheme } = useTheme()
 
-function getInitialTheme(): Theme {
-  const stored = localStorage.getItem('theme') as Theme | null
-  if (stored === 'light' || stored === 'dark') return stored
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+async function logout() {
+  await api.post('/auth/logout')
+  router.push('/login')
 }
-
-const theme = ref<Theme>(getInitialTheme())
-
-function toggleTheme() {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
-
-watch(
-  theme,
-  (value) => {
-    document.documentElement.setAttribute('data-theme', value)
-    localStorage.setItem('theme', value)
-  },
-  { immediate: true },
-)
 </script>
 
 <template>
   <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
-    <div class="flex-1"></div>
+    <div class="flex-1">
+      <button
+        v-if="route.name === 'admin'"
+        @click="logout"
+        class="btn btn-error text-xs font-semibold uppercase tracking-wider"
+      >
+        Logout
+      </button>
+    </div>
     <div class="flex-none px-2">
       <div
         class="tooltip tooltip-left"
