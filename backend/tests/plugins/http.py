@@ -23,7 +23,10 @@ from app.infrastructure.mongo_repository.utils import MongoDocument, to_database
 @lru_cache
 def settings_override_func() -> Settings:
     return Settings(
+        project_name="Test",
         environment=AppEnvironment.TESTING,
+        basic_username="username",
+        basic_password="password",
         jwt_secret=secrets.token_urlsafe(32),
         cookie_secure=False,
         access_token_expire=900,
