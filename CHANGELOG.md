@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.27.0](https://github.com/julienpillaud/julienpillaud/compare/0.26.0...0.27.0) (2026-08-24)
+
+
+### Features
+
+* improve auth ([#65](https://github.com/julienpillaud/julienpillaud/issues/65)) ([301b0b2](https://github.com/julienpillaud/julienpillaud/commit/301b0b206fd3bad83cb0ac838a6e7f8aff67e009))
+
 ## [0.26.0](https://github.com/julienpillaud/julienpillaud/compare/0.25.0...0.26.0) (2026-08-05)
 
 
