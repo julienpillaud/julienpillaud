@@ -9,7 +9,7 @@ backend/**/*.py[oc]
 backend/.mypy_cache/
 backend/.pytest_cache/
 backend/.ruff_cache/
-backend/dist/
+backend/dist
 
 # Frontend
 frontend/dist/

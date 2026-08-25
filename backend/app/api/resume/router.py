@@ -9,7 +9,7 @@ from app.api.resume.schemas import Resume
 from app.core.domain import Domain
 from app.domain.resume.use_cases import get_resume
 
-router = APIRouter(prefix="/api/resume", tags=["Resume"])
+router = APIRouter(prefix="/resume", tags=["Resume"])
 
 
 @router.get("", response_model=Resume)
