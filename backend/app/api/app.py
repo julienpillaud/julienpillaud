@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 
 from app.api.admin.router import router as admin_router
 from app.api.auth.router import router as auth_router
@@ -24,10 +24,12 @@ def create_fastapi_app(settings: Settings) -> FastAPI:
     mount_static(app=app, settings=settings)
     add_fastapi_docs(app=app)
 
-    app.include_router(auth_router)
-    app.include_router(main_router)
-    app.include_router(admin_router)
-    app.include_router(skills_router)
+    api_router = APIRouter(prefix="/api")
+    api_router.include_router(auth_router)
+    api_router.include_router(main_router)
+    api_router.include_router(admin_router)
+    api_router.include_router(skills_router)
+    app.include_router(api_router)
 
     if settings.environment == AppEnvironment.PRODUCTION:
         app.frontend("/", directory="dist")

@@ -25,7 +25,7 @@ from app.domain.exceptions import ForbiddenError, NotFoundError
 from app.domain.users.entities import UserPublic
 from app.domain.users.use_cases import authenticate_user, logout_user
 
-router = APIRouter(prefix="/api/auth", tags=["Auth"])
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/login")
