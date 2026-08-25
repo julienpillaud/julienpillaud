@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.0](https://github.com/julienpillaud/julienpillaud/compare/0.27.0...0.28.0) (2026-08-25)
+
+
+### Features
+
+* create api router ([#67](https://github.com/julienpillaud/julienpillaud/issues/67)) ([bb2d8ab](https://github.com/julienpillaud/julienpillaud/commit/bb2d8ab77bfa35e4f94c4c5cee98a5f969b8ce15))
+
 ## [0.27.0](https://github.com/julienpillaud/julienpillaud/compare/0.26.0...0.27.0) (2026-08-24)
 
 
