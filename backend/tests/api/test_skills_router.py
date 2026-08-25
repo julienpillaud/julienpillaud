@@ -15,7 +15,7 @@ def test_get_skills(
     n_categories = 3
     skill_factory.create_many(n_skills=10, n_categories=n_categories)
 
-    response = client.get("/skills")
+    response = client.get("/api/skills")
 
     assert response.status_code == status.HTTP_200_OK
     result = response.json()
@@ -30,7 +30,7 @@ def test_create_skill(
     skill_create = skill_factory.skill_create
     skill_create.category.id = None
 
-    response = client.post("/skills", json=skill_create.model_dump(mode="json"))
+    response = client.post("/api/skills", json=skill_create.model_dump(mode="json"))
 
     assert response.status_code == status.HTTP_201_CREATED
     result = response.json()
@@ -44,7 +44,7 @@ def test_create_skill_invalid_category(
 ) -> None:
     skill_create = skill_factory.skill_create
 
-    response = client.post("/skills", json=skill_create.model_dump(mode="json"))
+    response = client.post("/api/skills", json=skill_create.model_dump(mode="json"))
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
     result = response.json()
@@ -58,7 +58,7 @@ def test_delete_skill(
 ) -> None:
     skill = skill_factory.create_one()
 
-    response = client.delete(f"/skills/{skill.id}")
+    response = client.delete(f"/api/skills/{skill.id}")
 
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
@@ -66,7 +66,7 @@ def test_delete_skill(
 def test_delete_skill_not_found(client: TestClient, tokens: IssuedTokens) -> None:
     skill_id = uuid.uuid7()
 
-    response = client.delete(f"/skills/{skill_id}")
+    response = client.delete(f"/api/skills/{skill_id}")
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
     result = response.json()
